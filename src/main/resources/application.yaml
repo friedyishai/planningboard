@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=WhiteBoard;integratedSecurity=true;encrypt=true;trustServerCertificate=true;
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
