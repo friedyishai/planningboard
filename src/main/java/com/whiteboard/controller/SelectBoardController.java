@@ -27,6 +27,7 @@ public class SelectBoardController implements Initializable {
     private final BoardService boardService;
     private final AlertService alertService;
     private final NavigateService navigateService;
+    private final BoardController boardController;
 
     @FXML
     private ListView<String> boardsListView;
@@ -39,9 +40,9 @@ public class SelectBoardController implements Initializable {
         List<Board> boardsList = boardService.getAllBoards();
         boardsListView.getItems().addAll(boardsList.stream().map(Board::getName).collect(Collectors.toList()));
         boardsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        boardsListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            goToBoardBtn.setDisable(newValue.intValue() == -1);
-        });
+        boardsListView.getSelectionModel().selectedIndexProperty().addListener(
+                (observable, oldValue, newValue) -> goToBoardBtn.setDisable(newValue.intValue() == -1)
+        );
     }
 
     public void goToBoardBtnClickedHandle(ActionEvent event) {
@@ -49,7 +50,8 @@ public class SelectBoardController implements Initializable {
 
         if (selectedBoardName != null) {
             Board selectedBoard = boardService.getBoardByName(selectedBoardName);
-            navigateService.navigateToScreen(event, "board.fxml", selectedBoard);
+            boardController.setDisplayedBoard(selectedBoard);
+            navigateService.navigateToScreen(event, "board.fxml");
         } else {
             alertService.displayErrorAlert(UNSELECTED_BOARD_ERROR_MSG);
         }

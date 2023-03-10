@@ -8,4 +8,6 @@ public interface UserService {
     DBActionResult login(User user);
 
     DBActionResult register(User user);
+
+    User findByName(String username);
 }

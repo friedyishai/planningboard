@@ -1,8 +1,10 @@
 package com.whiteboard.controller;
 
+import com.whiteboard.dao.model.Board;
 import com.whiteboard.dto.DBActionResult;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.BoardService;
+import com.whiteboard.service.BoardUserConService;
 import com.whiteboard.service.NavigateService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +18,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.whiteboard.constants.Constants.BOARD_NAME_IS_REQUIRED;
-import static com.whiteboard.constants.Constants.UNAVAILABLE_BOARD_NAME;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class NewBoardController implements Initializable {
     private final BoardService boardService;
     private final AlertService alertService;
     private final NavigateService navigateService;
+    private final BoardController boardController;
 
     @FXML
     private TextField boardNameField;
@@ -35,8 +37,8 @@ public class NewBoardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         boardNameField.setOnAction(e -> {
-            boolean hasBoardName = boardNameField.getText().trim().isEmpty();
-            createNewBoardBtn.setDisable(!(hasBoardName));
+            boolean noBoardName = boardNameField.getText().trim().isEmpty();
+            createNewBoardBtn.setDisable(noBoardName);
         });
     }
 
@@ -49,18 +51,20 @@ public class NewBoardController implements Initializable {
         }
 
         DBActionResult result = boardService.createNewBoard(boardName);
-        handle(event, result);
-    }
-
-    private void handle(ActionEvent event, DBActionResult result) {
-        if (result.isSuccess()) {
-            navigateService.navigateToScreen(event, "board.fxml");
-        } else {
-            alertService.displayErrorAlert(UNAVAILABLE_BOARD_NAME);
-        }
+        handle(event, result, boardName);
     }
 
     public void goBack(ActionEvent event) {
         navigateService.navigateToLastScreen(event);
+    }
+
+    private void handle(ActionEvent event, DBActionResult result, String boardName) {
+        if (result.isSuccess()) {
+            Board newBoard = boardService.getBoardByName(boardName);
+            boardController.setDisplayedBoard(newBoard);
+            navigateService.navigateToScreen(event, "board.fxml");
+        } else {
+            alertService.displayErrorAlert(result.getFailureReason());
+        }
     }
 }

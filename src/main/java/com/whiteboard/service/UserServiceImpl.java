@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public DBActionResult login(User user) {
 
-        User userFromDb = userRepository.findByName(user.getName());
+        User userFromDb = findByName(user.getName());
 
         if (!(isUserExists(userFromDb)) ||
                 !(isPasswordEquals(user.getPassword(), userFromDb.getPassword()))) {
@@ -53,13 +53,18 @@ public class UserServiceImpl implements UserService {
         return DBActionResult.builder().isSuccess(true).build();
     }
 
+    @Override
+    public User findByName(String username) {
+        return userRepository.findByName(username);
+    }
+
     private boolean isEmailAvailable(String email) {
         User userFromDb = userRepository.findByEmail(email);
         return !(isUserExists(userFromDb));
     }
 
-    private boolean isUserNameAvailable(String userName) {
-        User userFromDb = userRepository.findByName(userName);
+    private boolean isUserNameAvailable(String username) {
+        User userFromDb = findByName(username);
         return !(isUserExists(userFromDb));
     }
 

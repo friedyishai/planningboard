@@ -1,8 +1,11 @@
 package com.whiteboard.dao.model;
 
+import com.whiteboard.enums.ShapeEnum;
 import jakarta.persistence.*;
-import javafx.scene.shape.Polygon;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
@@ -11,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "Shape")
-public class Shape {
+public class ShapeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +22,22 @@ public class Shape {
     private Integer id;
 
     @Column(nullable = false, columnDefinition = "numeric(10, 2)")
-    private Double centerX;
+    private Double x1;
 
     @Column(nullable = false, columnDefinition = "numeric(10, 2)")
-    private Double centerY;
+    private Double y1;
+
+    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    private Double x2;
+
+    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    private Double y2;
+
+    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    private Double x3;
+
+    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    private Double y3;
 
     @Column(columnDefinition = "numeric(10, 2)")
     private Double width;
@@ -31,10 +46,10 @@ public class Shape {
     private Double height;
 
     @Column(columnDefinition = "numeric(10, 2)")
-    private Double radius;
+    private Double radiusX;
 
-//    @Column(columnDefinition = "geometry")
-//    private Polygon points;
+    @Column(columnDefinition = "numeric(10, 2)")
+    private Double radiusY;
 
     @Column(columnDefinition = "numeric(10, 2)")
     private Double startX;
@@ -48,8 +63,8 @@ public class Shape {
     @Column(columnDefinition = "numeric(10, 2)")
     private Double endY;
 
-    @Column(nullable = false, columnDefinition = "varchar(25)")
-    private String shapeType;
+    @Column(nullable = false, columnDefinition = "int")
+    private ShapeEnum shapeType;
 
     @Column(nullable = false, columnDefinition = "varchar(25)")
     private String frameColor;

@@ -2,6 +2,10 @@ package com.whiteboard.dao.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @ToString
@@ -10,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "Message")
-public class Message {
+public class MessageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +26,8 @@ public class Message {
 
     @Column(nullable = false, columnDefinition = "bit")
     private Boolean isActive;
+
+    @Column(nullable = false, columnDefinition = "date")
+    @CreatedDate
+    private LocalDate createDate;
 }

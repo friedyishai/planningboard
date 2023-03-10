@@ -2,6 +2,7 @@ package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.User;
 import com.whiteboard.dto.DBActionResult;
+import com.whiteboard.dto.UserSession;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.NavigateService;
 import com.whiteboard.service.UserService;
@@ -18,6 +19,7 @@ public class UserController {
     private final UserService userService;
     private final AlertService alertService;
     private final NavigateService navigateService;
+    private final UserSession userSession;
 
     @FXML
     private TextField emailField;
@@ -38,7 +40,7 @@ public class UserController {
 
         DBActionResult result = userService.register(user);
 
-        handle(event, result);
+        handleResult(event, user.getName(), result);
     }
 
     public void login(ActionEvent event) {
@@ -50,16 +52,30 @@ public class UserController {
 
         DBActionResult result = userService.login(user);
 
-        handle(event, result);
+        handleResult(event, user.getName(), result);
     }
 
-    private void handle(ActionEvent event, DBActionResult result) {
+    public void goBack(ActionEvent event) {
+        navigateService.navigateToLastScreen(event);
+    }
+
+    private void handleResult(ActionEvent event, String username, DBActionResult result) {
         if (result.isSuccess()) {
-            navigateService.navigateToScreen(event, "select-board.fxml");
+            handleSuccess(event, username);
         } else {
-            alertService.displayErrorAlert(result.getFailureReason());
-            clearForm();
+            handleFailure(result);
         }
+    }
+
+    private void handleSuccess(ActionEvent event, String username) {
+        User user = userService.findByName(username);
+        userSession.setUser(user);
+        navigateService.navigateToScreen(event, "select-board.fxml");
+    }
+
+    private void handleFailure(DBActionResult result) {
+        alertService.displayErrorAlert(result.getFailureReason());
+        clearForm();
     }
 
     private void clearForm() {
@@ -68,9 +84,5 @@ public class UserController {
         if (null != emailField) {
             emailField.setText(null);
         }
-    }
-
-    public void goBack(ActionEvent event) {
-        navigateService.navigateToLastScreen(event);
     }
 }

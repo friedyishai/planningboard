@@ -13,6 +13,9 @@ public class Constants {
             UNAVAILABLE_BOARD_NAME = "The board name is already taken.",
             BOARD_NAME_IS_REQUIRED = "The board name field is required";
 
+    public static final int
+        POINTS_IN_TRIANGLE = 3;
+
     private Constants() {
     }
 }
