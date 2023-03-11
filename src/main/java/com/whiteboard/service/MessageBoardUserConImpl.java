@@ -3,25 +3,35 @@ package com.whiteboard.service;
 import com.whiteboard.dao.model.Board;
 import com.whiteboard.dao.model.MessageBoardUserCon;
 import com.whiteboard.dao.repository.MessageBoardUserConRepository;
+import com.whiteboard.general.DisplayedBoard;
+import com.whiteboard.general.UserSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class MessageBoardUserConImpl implements MessageBoardUserConSerivce {
 
     private final MessageBoardUserConRepository messageBoardUserConRepository;
+    private final UserSession userSession;
+    private final DisplayedBoard displayedBoard;
 
-    public List<Integer> getMessageIds(Board board) {
+    public List<MessageBoardUserCon> getMessageIds(Board board) {
         return messageBoardUserConRepository.
-                findByBoardIdAndByCreateDateGreaterThanEqual(board.getId(), LocalDate.now())
-                .stream()
-                .map(MessageBoardUserCon::getMessageId)
-                .collect(Collectors.toList());
+                findByBoardIdAndByCreateDateGreaterThanEqual(board.getId(), LocalDate.now());
+    }
+
+    @Override
+    public MessageBoardUserCon save(Integer messageId) {
+        MessageBoardUserCon messageBoardUserCon = MessageBoardUserCon.builder()
+                .messageId(messageId)
+                .boardId(displayedBoard.getBoard().getId())
+                .userId(userSession.getUser().getId())
+                .build();
+
+        return messageBoardUserConRepository.save(messageBoardUserCon);
     }
 }

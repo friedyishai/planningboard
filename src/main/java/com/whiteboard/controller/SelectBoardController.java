@@ -1,6 +1,7 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.Board;
+import com.whiteboard.general.DisplayedBoard;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.BoardService;
 import com.whiteboard.service.NavigateService;
@@ -27,7 +28,7 @@ public class SelectBoardController implements Initializable {
     private final BoardService boardService;
     private final AlertService alertService;
     private final NavigateService navigateService;
-    private final BoardController boardController;
+    private final DisplayedBoard displayedBoard;
 
     @FXML
     private ListView<String> boardsListView;
@@ -50,7 +51,7 @@ public class SelectBoardController implements Initializable {
 
         if (selectedBoardName != null) {
             Board selectedBoard = boardService.getBoardByName(selectedBoardName);
-            boardController.setDisplayedBoard(selectedBoard);
+            displayedBoard.setBoard(selectedBoard);
             navigateService.navigateToScreen(event, "board.fxml");
         } else {
             alertService.displayErrorAlert(UNSELECTED_BOARD_ERROR_MSG);

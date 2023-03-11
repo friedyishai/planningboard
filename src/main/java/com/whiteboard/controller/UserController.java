@@ -1,8 +1,8 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.User;
-import com.whiteboard.dto.DBActionResult;
-import com.whiteboard.dto.UserSession;
+import com.whiteboard.general.DBActionResult;
+import com.whiteboard.general.UserSession;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.NavigateService;
 import com.whiteboard.service.UserService;

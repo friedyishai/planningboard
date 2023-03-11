@@ -16,4 +16,14 @@ public class ShapeEntityServiceImpl implements ShapeEntityService {
     public List<ShapeEntity> getAllShapes(List<Integer> shapesIds) {
         return shapeRepository.findByIdInAndIsActive(shapesIds, true);
     }
+
+    @Override
+    public ShapeEntity save(ShapeEntity shapeEntity) {
+        return shapeRepository.save(shapeEntity);
+    }
+
+    @Override
+    public void remove(ShapeEntity shapeEntity) {
+        shapeEntity.setIsActive(false);
+    }
 }

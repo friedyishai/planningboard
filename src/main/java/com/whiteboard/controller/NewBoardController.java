@@ -1,10 +1,10 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.Board;
-import com.whiteboard.dto.DBActionResult;
+import com.whiteboard.general.DBActionResult;
+import com.whiteboard.general.DisplayedBoard;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.BoardService;
-import com.whiteboard.service.BoardUserConService;
 import com.whiteboard.service.NavigateService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +26,7 @@ public class NewBoardController implements Initializable {
     private final BoardService boardService;
     private final AlertService alertService;
     private final NavigateService navigateService;
-    private final BoardController boardController;
+    private final DisplayedBoard displayedBoard;
 
     @FXML
     private TextField boardNameField;
@@ -61,7 +61,7 @@ public class NewBoardController implements Initializable {
     private void handle(ActionEvent event, DBActionResult result, String boardName) {
         if (result.isSuccess()) {
             Board newBoard = boardService.getBoardByName(boardName);
-            boardController.setDisplayedBoard(newBoard);
+            displayedBoard.setBoard(newBoard);
             navigateService.navigateToScreen(event, "board.fxml");
         } else {
             alertService.displayErrorAlert(result.getFailureReason());

@@ -17,4 +17,14 @@ public class TextEntityServiceImpl implements TextEntityService {
     public List<TextEntity> getAllTexts(List<Integer> textsIds) {
         return textRepository.findByIdInAndIsActive(textsIds, true);
     }
+
+    @Override
+    public TextEntity save(TextEntity textEntity) {
+        return textRepository.save(textEntity);
+    }
+
+    @Override
+    public void remove(TextEntity textEntity) {
+        textEntity.setIsActive(false);
+    }
 }

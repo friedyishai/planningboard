@@ -1,4 +1,4 @@
-package com.whiteboard.dto;
+package com.whiteboard.general;
 
 import lombok.Builder;
 import lombok.Data;

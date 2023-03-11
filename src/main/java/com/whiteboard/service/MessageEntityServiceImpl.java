@@ -16,4 +16,13 @@ public class MessageEntityServiceImpl implements MessageEntityService {
     public List<MessageEntity> getAllMessages(List<Integer> messageIds) {
         return messageRepository.findByIdInAndIsActive(messageIds, true);
     }
+
+    public MessageEntity save(String messageContent) {
+        MessageEntity messageEntity = MessageEntity.builder()
+                .content(messageContent)
+                .isActive(true)
+                .build();
+
+        return messageRepository.save(messageEntity);
+    }
 }

@@ -2,7 +2,7 @@ package com.whiteboard.service;
 
 import com.whiteboard.dao.model.Board;
 import com.whiteboard.dao.repository.BoardRepository;
-import com.whiteboard.dto.DBActionResult;
+import com.whiteboard.general.DBActionResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

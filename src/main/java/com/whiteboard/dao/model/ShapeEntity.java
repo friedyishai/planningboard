@@ -51,18 +51,6 @@ public class ShapeEntity {
     @Column(columnDefinition = "numeric(10, 2)")
     private Double radiusY;
 
-    @Column(columnDefinition = "numeric(10, 2)")
-    private Double startX;
-
-    @Column(columnDefinition = "numeric(10, 2)")
-    private Double startY;
-
-    @Column(columnDefinition = "numeric(10, 2)")
-    private Double endX;
-
-    @Column(columnDefinition = "numeric(10, 2)")
-    private Double endY;
-
     @Column(nullable = false, columnDefinition = "int")
     private ShapeEnum shapeType;
 
