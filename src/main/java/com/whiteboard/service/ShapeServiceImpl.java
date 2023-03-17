@@ -2,11 +2,13 @@ package com.whiteboard.service;
 
 import com.whiteboard.dao.model.ShapeEntity;
 import com.whiteboard.enums.ShapeEnum;
-import com.whiteboard.general.DisplayedBoard;
+import com.whiteboard.util.DisplayedBoard;
 import jakarta.annotation.PostConstruct;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import static com.whiteboard.constants.Constants.*;
 
 @RequiredArgsConstructor
 @Service
+@Lazy
 public class ShapeServiceImpl implements ShapeService {
 
     private final ShapeBoardConService shapeBoardConService;
@@ -29,6 +32,8 @@ public class ShapeServiceImpl implements ShapeService {
 
     @Override
     public void createShapeAndAddToContext(ShapeEntity shapeEntity, GraphicsContext graphicsContext) {
+        setColors(shapeEntity, graphicsContext);
+
         switch (shapeEntity.getShapeType()) {
             case Rectangle -> graphicsContext.fillRect(
                     shapeEntity.getX1(),
@@ -62,8 +67,6 @@ public class ShapeServiceImpl implements ShapeService {
                     shapeEntity.getY2()
             );
         }
-
-        setColors(shapeEntity, graphicsContext);
     }
 
     @Override
@@ -79,9 +82,7 @@ public class ShapeServiceImpl implements ShapeService {
                 .isActive(true)
                 .build();
 
-        undoStack.push(shapeService.save(shapeEntity));
-
-        createShapeAndAddToContext(undoStack.peek(), graphicsContext);
+        handleCreateAndSave(graphicsContext, shapeEntity);
     }
 
     @Override
@@ -97,9 +98,7 @@ public class ShapeServiceImpl implements ShapeService {
                 .isActive(true)
                 .build();
 
-        undoStack.push(shapeService.save(shapeEntity));
-
-        createShapeAndAddToContext(undoStack.peek(), graphicsContext);
+        handleCreateAndSave(graphicsContext, shapeEntity);
     }
 
     @Override
@@ -115,9 +114,7 @@ public class ShapeServiceImpl implements ShapeService {
                 .isActive(true)
                 .build();
 
-        undoStack.push(shapeService.save(shapeEntity));
-
-        createShapeAndAddToContext(undoStack.peek(), graphicsContext);
+        handleCreateAndSave(graphicsContext, shapeEntity);
     }
 
     @Override
@@ -135,9 +132,7 @@ public class ShapeServiceImpl implements ShapeService {
                 .isActive(true)
                 .build();
 
-        undoStack.push(shapeService.save(shapeEntity));
-
-        createShapeAndAddToContext(undoStack.peek(), graphicsContext);
+        handleCreateAndSave(graphicsContext, shapeEntity);
     }
 
     @Override
@@ -146,7 +141,7 @@ public class ShapeServiceImpl implements ShapeService {
     }
 
     @Override
-    public void undo() {
+    public void undo(Canvas canvas) {
         if (undoStack.empty()) {
             return;
         }
@@ -154,11 +149,13 @@ public class ShapeServiceImpl implements ShapeService {
         ShapeEntity shapeEntity = undoStack.pop();
         shapeService.remove(shapeEntity);
         boardShapes.remove(shapeEntity);
+        shapeBoardConService.remove(shapeEntity.getId());
         redoStack.push(shapeEntity);
+        canvasRepaint(canvas);
     }
 
     @Override
-    public void redo() {
+    public void redo(Canvas canvas) {
         if (redoStack.empty()) {
             return;
         }
@@ -166,16 +163,44 @@ public class ShapeServiceImpl implements ShapeService {
         ShapeEntity shapeEntity = redoStack.pop();
         shapeService.save(shapeEntity);
         boardShapes.add(shapeEntity);
+        shapeBoardConService.save(shapeEntity.getId());
+        undoStack.push(shapeEntity);
+        canvasRepaint(canvas);
     }
 
     private void setColors(ShapeEntity shapeEntity, GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Paint.valueOf(shapeEntity.getFillColor()));
-        graphicsContext.setStroke(Paint.valueOf(shapeEntity.getFrameColor()));
+        Paint fill = (null == shapeEntity.getFillColor()) ?
+                graphicsContext.getFill() : Paint.valueOf(shapeEntity.getFillColor());
+
+        Paint stroke = (null == shapeEntity.getFrameColor()) ?
+                graphicsContext.getStroke() : Paint.valueOf(shapeEntity.getFrameColor());
+
+        shapeEntity.setFillColor(fill.toString());
+        shapeEntity.setFrameColor(stroke.toString());
+
+        graphicsContext.setFill(fill);
+        graphicsContext.setStroke(stroke);
     }
 
     @PostConstruct
     private void init() {
         List<Integer> boardShapesIds = shapeBoardConService.getAllShapeIds(displayedBoard.getBoard());
         boardShapes = shapeService.getAllShapes(boardShapesIds);
+    }
+
+    private void handleCreateAndSave(GraphicsContext graphicsContext, ShapeEntity shapeEntity) {
+        ShapeEntity savedShapeEntity = shapeService.save(shapeEntity);
+
+        shapeBoardConService.save(savedShapeEntity.getId());
+        undoStack.push(savedShapeEntity);
+        boardShapes.add(savedShapeEntity);
+
+        createShapeAndAddToContext(undoStack.peek(), graphicsContext);
+    }
+
+    private void canvasRepaint(Canvas canvas) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        addBoardShapes(gc);
     }
 }

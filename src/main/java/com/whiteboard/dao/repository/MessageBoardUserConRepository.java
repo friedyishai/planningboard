@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MessageBoardUserConRepository extends JpaRepository<MessageBoardUserCon, Integer> {
 
-    List<MessageBoardUserCon> findByBoardIdAndByCreateDateGreaterThanEqual(
+    List<MessageBoardUserCon> findByBoardIdAndCreateDateGreaterThanEqual(
             Integer boardId,
             LocalDate today
     );

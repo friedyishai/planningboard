@@ -1,13 +1,15 @@
 package com.whiteboard.service;
 
-import com.whiteboard.dao.model.Board;
 import com.whiteboard.dao.model.BoardUserCon;
 import com.whiteboard.dao.repository.BoardUserConRepository;
-import com.whiteboard.general.DisplayedBoard;
-import com.whiteboard.general.UserSession;
+import com.whiteboard.util.DisplayedBoard;
+import com.whiteboard.util.UserSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardUserConServiceImpl implements BoardUserConService {
@@ -21,16 +23,19 @@ public class BoardUserConServiceImpl implements BoardUserConService {
                 .boardId(displayedBoard.getBoard().getId())
                 .userId(userSession.getUser().getId())
                 .build();
-
-        boardUserConRepository.save(boardUserCon);
+        try {
+            boardUserConRepository.save(boardUserCon);
+        } catch (DataIntegrityViolationException e) {
+            log.info("BoardUserConServiceImpl:: addUserToBoard ignoring PersistenceException");
+        }
     }
 
     public void removeUserFromBoard() {
-        BoardUserCon boardUserCon = BoardUserCon.builder()
-                .boardId(displayedBoard.getBoard().getId())
-                .userId(userSession.getUser().getId())
-                .build();
+        BoardUserCon boardUserCon = boardUserConRepository.findByBoardIdAndUserId(
+                displayedBoard.getBoard().getId(),
+                userSession.getUser().getId()
+        );
 
-        boardUserConRepository.delete(boardUserCon);
+        boardUserConRepository.deleteById(boardUserCon.getId());
     }
 }

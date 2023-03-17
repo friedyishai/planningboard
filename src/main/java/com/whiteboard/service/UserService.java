@@ -1,7 +1,7 @@
 package com.whiteboard.service;
 
 import com.whiteboard.dao.model.User;
-import com.whiteboard.general.DBActionResult;
+import com.whiteboard.util.DBActionResult;
 
 public interface UserService {
 

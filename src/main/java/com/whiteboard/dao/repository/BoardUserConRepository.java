@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardUserConRepository extends JpaRepository<BoardUserCon, Integer> {
+    BoardUserCon findByBoardIdAndUserId(Integer id, Integer id1);
 }

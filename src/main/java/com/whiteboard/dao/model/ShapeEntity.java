@@ -27,16 +27,16 @@ public class ShapeEntity {
     @Column(nullable = false, columnDefinition = "numeric(10, 2)")
     private Double y1;
 
-    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    @Column(columnDefinition = "numeric(10, 2)")
     private Double x2;
 
-    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    @Column(columnDefinition = "numeric(10, 2)")
     private Double y2;
 
-    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    @Column(columnDefinition = "numeric(10, 2)")
     private Double x3;
 
-    @Column(nullable = false, columnDefinition = "numeric(10, 2)")
+    @Column(columnDefinition = "numeric(10, 2)")
     private Double y3;
 
     @Column(columnDefinition = "numeric(10, 2)")

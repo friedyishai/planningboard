@@ -2,6 +2,7 @@ package com.whiteboard.service;
 
 import com.whiteboard.dao.model.ShapeEntity;
 import com.whiteboard.dao.model.TextEntity;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 public interface ShapeService {
@@ -18,7 +19,7 @@ public interface ShapeService {
 
     void addBoardShapes(GraphicsContext graphicsContext2D);
 
-    void undo();
+    void undo(Canvas canvas);
 
-    void redo();
+    void redo(Canvas canvas);
 }

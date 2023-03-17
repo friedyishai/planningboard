@@ -1,23 +1,26 @@
 package com.whiteboard.controller;
 
-import com.whiteboard.dao.model.Board;
-import com.whiteboard.enums.Entity;
-import com.whiteboard.general.UserSession;
+import com.sun.javafx.geom.Shape;
+import com.whiteboard.enums.EntityEnum;
+import com.whiteboard.util.UserSession;
 import com.whiteboard.service.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Stack;
 
+import static com.whiteboard.constants.Constants.DEFAULT_STROKE_WIDTH;
+
 @RequiredArgsConstructor
 @Component
+@Lazy
 public class BoardController {
 
     private final ShapeService shapeService;
@@ -38,15 +41,17 @@ public class BoardController {
     @FXML
     private Canvas canvas;
 
-    private final Stack<Entity> undoStack = new Stack<>();
-    private final Stack<Entity> redoStack = new Stack<>();
+    private final Stack<EntityEnum> undoStack = new Stack<>();
+    private final Stack<EntityEnum> redoStack = new Stack<>();
 
     @FXML
     public void initialize() {
+        canvas.getGraphicsContext2D().setLineWidth(DEFAULT_STROKE_WIDTH);
         boardUserConService.addUserToBoard();
         messagesList.getItems().addAll(messageService.getMessages());
         shapeService.addBoardShapes(canvas.getGraphicsContext2D());
         textService.addBoardTexts(canvas.getGraphicsContext2D());
+        setColors();
     }
 
     public void goBack(ActionEvent event) {
@@ -55,22 +60,22 @@ public class BoardController {
     }
 
     public void createLine(ActionEvent event) {
-        undoStack.push(Entity.SHAPE);
+        undoStack.push(EntityEnum.SHAPE);
         shapeService.createDefaultLine(canvas.getGraphicsContext2D());
     }
 
     public void createCircle(ActionEvent event) {
-        undoStack.push(Entity.SHAPE);
+        undoStack.push(EntityEnum.SHAPE);
         shapeService.createDefaultCircle(canvas.getGraphicsContext2D());
     }
 
     public void createRectangle(ActionEvent event) {
-        undoStack.push(Entity.SHAPE);
+        undoStack.push(EntityEnum.SHAPE);
         shapeService.createDefaultRectangle(canvas.getGraphicsContext2D());
     }
 
     public void createTriangle(ActionEvent event) {
-        undoStack.push(Entity.SHAPE);
+        undoStack.push(EntityEnum.SHAPE);
         shapeService.createDefaultTriangle(canvas.getGraphicsContext2D());
     }
 
@@ -79,10 +84,10 @@ public class BoardController {
             return;
         }
 
-        Entity entity = redoStack.pop();
+        EntityEnum entity = redoStack.pop();
 
-        if (entity.equals(Entity.SHAPE)) {
-            shapeService.redo();
+        if (entity.equals(EntityEnum.SHAPE)) {
+            shapeService.redo(canvas);
         } else {
             textService.redo();
         }
@@ -95,10 +100,10 @@ public class BoardController {
             return;
         }
 
-        Entity entity = undoStack.pop();
+        EntityEnum entity = undoStack.pop();
 
-        if (entity.equals(Entity.SHAPE)) {
-            shapeService.undo();
+        if (entity.equals(EntityEnum.SHAPE)) {
+            shapeService.undo(canvas);
         } else {
             textService.undo();
         }
@@ -107,11 +112,11 @@ public class BoardController {
     }
 
     public void fillColorChangedHandle(ActionEvent event) {
-        canvas.getGraphicsContext2D().setFill(fillColor.getValue());
+        setColors();
     }
 
     public void outlineColorChangedHandle(ActionEvent event) {
-        canvas.getGraphicsContext2D().setStroke(outlineColor.getValue());
+        setColors();
     }
 
     public void fontChangeHandle(ActionEvent event) {
@@ -130,5 +135,10 @@ public class BoardController {
 
     public void createText(ActionEvent event) {
         textService.createDefaultText(canvas.getGraphicsContext2D());
+    }
+
+    private void setColors() {
+        canvas.getGraphicsContext2D().setFill(fillColor.getValue());
+        canvas.getGraphicsContext2D().setStroke(outlineColor.getValue());
     }
 }

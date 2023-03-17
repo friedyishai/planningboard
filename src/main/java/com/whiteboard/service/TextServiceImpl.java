@@ -1,12 +1,13 @@
 package com.whiteboard.service;
 
 import com.whiteboard.dao.model.TextEntity;
-import com.whiteboard.general.DisplayedBoard;
+import com.whiteboard.util.DisplayedBoard;
 import jakarta.annotation.PostConstruct;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import static com.whiteboard.constants.Constants.*;
 
 @RequiredArgsConstructor
 @Service
+@Lazy
 public class TextServiceImpl implements TextService {
 
     private final TextBoardConService textBoardConService;

@@ -3,8 +3,8 @@ package com.whiteboard.service;
 import com.whiteboard.dao.model.Board;
 import com.whiteboard.dao.model.MessageBoardUserCon;
 import com.whiteboard.dao.repository.MessageBoardUserConRepository;
-import com.whiteboard.general.DisplayedBoard;
-import com.whiteboard.general.UserSession;
+import com.whiteboard.util.DisplayedBoard;
+import com.whiteboard.util.UserSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class MessageBoardUserConImpl implements MessageBoardUserConSerivce {
+public class MessageBoardUserConServiceImpl implements MessageBoardUserConSerivce {
 
     private final MessageBoardUserConRepository messageBoardUserConRepository;
     private final UserSession userSession;
@@ -21,7 +21,7 @@ public class MessageBoardUserConImpl implements MessageBoardUserConSerivce {
 
     public List<MessageBoardUserCon> getMessageIds(Board board) {
         return messageBoardUserConRepository.
-                findByBoardIdAndByCreateDateGreaterThanEqual(board.getId(), LocalDate.now());
+                findByBoardIdAndCreateDateGreaterThanEqual(board.getId(), LocalDate.now());
     }
 
     @Override

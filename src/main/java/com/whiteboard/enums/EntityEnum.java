@@ -1,6 +1,6 @@
 package com.whiteboard.enums;
 
-public enum Entity {
+public enum EntityEnum {
     SHAPE,
     TEXT
 }

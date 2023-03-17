@@ -1,7 +1,7 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.Board;
-import com.whiteboard.general.DisplayedBoard;
+import com.whiteboard.util.DisplayedBoard;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.BoardService;
 import com.whiteboard.service.NavigateService;

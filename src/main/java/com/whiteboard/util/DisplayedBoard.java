@@ -1,4 +1,4 @@
-package com.whiteboard.general;
+package com.whiteboard.util;
 
 import com.whiteboard.dao.model.Board;
 import lombok.Data;

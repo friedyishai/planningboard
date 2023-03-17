@@ -2,10 +2,11 @@ package com.whiteboard.service;
 
 import com.whiteboard.dao.model.MessageBoardUserCon;
 import com.whiteboard.dao.model.MessageEntity;
-import com.whiteboard.general.DisplayedBoard;
-import com.whiteboard.general.UserSession;
+import com.whiteboard.util.DisplayedBoard;
+import com.whiteboard.util.UserSession;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service("prototype")
+@Lazy
 public class MessageServiceImpl implements MessageService {
 
     private final MessageBoardUserConSerivce messageBoardUserConSerivce;

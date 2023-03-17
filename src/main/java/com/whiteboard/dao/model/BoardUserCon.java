@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "CON_BoardToUser")
+@Table(name = "CON_BoardToUser", uniqueConstraints = {@UniqueConstraint(columnNames = {"boardId", "userId"})})
 public class BoardUserCon {
 
     @Id

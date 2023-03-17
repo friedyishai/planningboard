@@ -28,7 +28,8 @@ public class Constants {
             DEFAULT_WIDTH = 100.0,
             DEFAULT_HEIGHT = 100.0,
             DEFAULT_RADIUS_X = 50.0,
-            DEFAULT_RADIUS_Y = 50.0;
+            DEFAULT_RADIUS_Y = 50.0,
+            DEFAULT_STROKE_WIDTH = 2.0;
 
     private Constants() {
     }
