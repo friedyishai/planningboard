@@ -23,12 +23,6 @@ public class TextEntity {
     @Column(nullable = false, columnDefinition = "numeric(10, 2)")
     private Double startY;
 
-    @Column(nullable = false)
-    private Integer rows;
-
-    @Column(nullable = false)
-    private Integer columns;
-
     @Column(nullable = false, columnDefinition = "varchar(250)")
     private String content;
 

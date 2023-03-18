@@ -55,10 +55,10 @@ public class ShapeEntity {
     private ShapeEnum shapeType;
 
     @Column(nullable = false, columnDefinition = "varchar(25)")
-    private String frameColor;
+    private String fillColor;
 
     @Column(nullable = false, columnDefinition = "varchar(25)")
-    private String fillColor;
+    private String strokeColor;
 
     @Column(nullable = false, columnDefinition = "bit")
     private Boolean isActive;

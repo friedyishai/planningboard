@@ -35,7 +35,7 @@ public class ShapeServiceImpl implements ShapeService {
         setColors(shapeEntity, graphicsContext);
 
         switch (shapeEntity.getShapeType()) {
-            case Rectangle -> graphicsContext.fillRect(
+            case Rectangle ->  graphicsContext.fillRect(
                     shapeEntity.getX1(),
                     shapeEntity.getY1(),
                     shapeEntity.getWidth(),
@@ -72,8 +72,8 @@ public class ShapeServiceImpl implements ShapeService {
     @Override
     public void createDefaultLine(GraphicsContext graphicsContext) {
         ShapeEntity shapeEntity = ShapeEntity.builder()
-                .frameColor(graphicsContext.getFill().toString())
                 .fillColor(graphicsContext.getFill().toString())
+                .strokeColor(graphicsContext.getStroke().toString())
                 .x1(DEFAULT_X1)
                 .y1(DEFAULT_Y1)
                 .x2(DEFAULT_X2)
@@ -88,8 +88,8 @@ public class ShapeServiceImpl implements ShapeService {
     @Override
     public void createDefaultCircle(GraphicsContext graphicsContext) {
         ShapeEntity shapeEntity = ShapeEntity.builder()
-                .frameColor(graphicsContext.getFill().toString())
                 .fillColor(graphicsContext.getFill().toString())
+                .strokeColor(graphicsContext.getStroke().toString())
                 .x1(DEFAULT_X1)
                 .y1(DEFAULT_Y1)
                 .radiusX(DEFAULT_RADIUS_X)
@@ -104,8 +104,8 @@ public class ShapeServiceImpl implements ShapeService {
     @Override
     public void createDefaultRectangle(GraphicsContext graphicsContext) {
         ShapeEntity shapeEntity = ShapeEntity.builder()
-                .frameColor(graphicsContext.getFill().toString())
                 .fillColor(graphicsContext.getFill().toString())
+                .strokeColor(graphicsContext.getStroke().toString())
                 .x1(DEFAULT_X1)
                 .y1(DEFAULT_Y1)
                 .width(DEFAULT_WIDTH)
@@ -120,8 +120,8 @@ public class ShapeServiceImpl implements ShapeService {
     @Override
     public void createDefaultTriangle(GraphicsContext graphicsContext) {
         ShapeEntity shapeEntity = ShapeEntity.builder()
-                .frameColor(graphicsContext.getFill().toString())
                 .fillColor(graphicsContext.getFill().toString())
+                .strokeColor(graphicsContext.getStroke().toString())
                 .x1(DEFAULT_X1)
                 .y1(DEFAULT_Y1)
                 .x2(DEFAULT_X2)
@@ -151,7 +151,6 @@ public class ShapeServiceImpl implements ShapeService {
         boardShapes.remove(shapeEntity);
         shapeBoardConService.remove(shapeEntity.getId());
         redoStack.push(shapeEntity);
-        canvasRepaint(canvas);
     }
 
     @Override
@@ -165,18 +164,17 @@ public class ShapeServiceImpl implements ShapeService {
         boardShapes.add(shapeEntity);
         shapeBoardConService.save(shapeEntity.getId());
         undoStack.push(shapeEntity);
-        canvasRepaint(canvas);
     }
 
     private void setColors(ShapeEntity shapeEntity, GraphicsContext graphicsContext) {
         Paint fill = (null == shapeEntity.getFillColor()) ?
                 graphicsContext.getFill() : Paint.valueOf(shapeEntity.getFillColor());
 
-        Paint stroke = (null == shapeEntity.getFrameColor()) ?
-                graphicsContext.getStroke() : Paint.valueOf(shapeEntity.getFrameColor());
+        Paint stroke = (null == shapeEntity.getStrokeColor()) ?
+                graphicsContext.getStroke() : Paint.valueOf(shapeEntity.getStrokeColor());
 
         shapeEntity.setFillColor(fill.toString());
-        shapeEntity.setFrameColor(stroke.toString());
+        shapeEntity.setStrokeColor(stroke.toString());
 
         graphicsContext.setFill(fill);
         graphicsContext.setStroke(stroke);
@@ -190,17 +188,9 @@ public class ShapeServiceImpl implements ShapeService {
 
     private void handleCreateAndSave(GraphicsContext graphicsContext, ShapeEntity shapeEntity) {
         ShapeEntity savedShapeEntity = shapeService.save(shapeEntity);
-
         shapeBoardConService.save(savedShapeEntity.getId());
         undoStack.push(savedShapeEntity);
         boardShapes.add(savedShapeEntity);
-
-        createShapeAndAddToContext(undoStack.peek(), graphicsContext);
-    }
-
-    private void canvasRepaint(Canvas canvas) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        addBoardShapes(gc);
+        createShapeAndAddToContext(savedShapeEntity, graphicsContext);
     }
 }

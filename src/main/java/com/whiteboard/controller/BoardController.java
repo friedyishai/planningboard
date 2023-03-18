@@ -1,22 +1,24 @@
 package com.whiteboard.controller;
 
-import com.sun.javafx.geom.Shape;
 import com.whiteboard.enums.EntityEnum;
-import com.whiteboard.util.UserSession;
 import com.whiteboard.service.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Stack;
 
-import static com.whiteboard.constants.Constants.DEFAULT_STROKE_WIDTH;
+import static com.whiteboard.constants.Constants.DEFAULT_FONT_SIZE;
 
 @RequiredArgsConstructor
 @Component
@@ -28,7 +30,6 @@ public class BoardController {
     private final MessageService messageService;
     private final BoardUserConService boardUserConService;
     private final NavigateService navigateService;
-    private final UserSession userSession;
 
     @FXML
     private ListView<String> messagesList;
@@ -37,21 +38,24 @@ public class BoardController {
     @FXML
     private ColorPicker fillColor;
     @FXML
-    private ColorPicker outlineColor;
+    private ColorPicker strokeColor;
     @FXML
     private Canvas canvas;
+    @FXML
+    private ChoiceBox<String> fontChoiceBox;
+    @FXML
+    private TextField fontSizeTextField;
 
     private final Stack<EntityEnum> undoStack = new Stack<>();
     private final Stack<EntityEnum> redoStack = new Stack<>();
 
     @FXML
     public void initialize() {
-        canvas.getGraphicsContext2D().setLineWidth(DEFAULT_STROKE_WIDTH);
-        boardUserConService.addUserToBoard();
-        messagesList.getItems().addAll(messageService.getMessages());
-        shapeService.addBoardShapes(canvas.getGraphicsContext2D());
-        textService.addBoardTexts(canvas.getGraphicsContext2D());
+//        canvas.getGraphicsContext2D().setLineWidth(DEFAULT_STROKE_WIDTH);
+        setFont();
         setColors();
+        setBoardContent();
+        //TODO Test undo redo (maybe need to empty stacks when action chain is break)
     }
 
     public void goBack(ActionEvent event) {
@@ -89,10 +93,11 @@ public class BoardController {
         if (entity.equals(EntityEnum.SHAPE)) {
             shapeService.redo(canvas);
         } else {
-            textService.redo();
+            textService.redo(canvas);
         }
 
         undoStack.push(entity);
+        canvasRepaint();
     }
 
     public void undo(ActionEvent event) {
@@ -105,10 +110,11 @@ public class BoardController {
         if (entity.equals(EntityEnum.SHAPE)) {
             shapeService.undo(canvas);
         } else {
-            textService.undo();
+            textService.undo(canvas);
         }
 
         redoStack.push(entity);
+        canvasRepaint();
     }
 
     public void fillColorChangedHandle(ActionEvent event) {
@@ -120,12 +126,21 @@ public class BoardController {
     }
 
     public void fontChangeHandle(ActionEvent event) {
+        double fontSize;
+
+        try {
+            fontSize = Double.parseDouble(fontSizeTextField.getText());
+        } catch (NumberFormatException e) {
+            fontSize = DEFAULT_FONT_SIZE;
+        }
+
+        canvas.getGraphicsContext2D().setFont(Font.font(fontChoiceBox.getValue(), fontSize));
     }
 
     public void createMessage(ActionEvent event) {
         String messageContent = messageTextField.getText();
 
-        if(messageContent.isEmpty()) {
+        if (messageContent.isEmpty()) {
             return;
         }
 
@@ -134,11 +149,33 @@ public class BoardController {
     }
 
     public void createText(ActionEvent event) {
+        undoStack.push(EntityEnum.TEXT);
         textService.createDefaultText(canvas.getGraphicsContext2D());
+    }
+
+    private void setFont() {
+        List<String> f = textService.getFonts();
+        fontChoiceBox.getItems().addAll(textService.getFonts());
+        fontChoiceBox.setValue(fontChoiceBox.getItems().get(0));
+        canvas.getGraphicsContext2D().setFont(Font.font(fontChoiceBox.getItems().get(0), DEFAULT_FONT_SIZE));
     }
 
     private void setColors() {
         canvas.getGraphicsContext2D().setFill(fillColor.getValue());
-        canvas.getGraphicsContext2D().setStroke(outlineColor.getValue());
+        canvas.getGraphicsContext2D().setStroke(strokeColor.getValue());
+    }
+
+    private void setBoardContent() {
+        boardUserConService.addUserToBoard();
+        messagesList.getItems().addAll(messageService.getMessages());
+        shapeService.addBoardShapes(canvas.getGraphicsContext2D());
+        textService.addBoardTexts(canvas.getGraphicsContext2D());
+    }
+
+    private void canvasRepaint() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        shapeService.addBoardShapes(canvas.getGraphicsContext2D());
+        textService.addBoardTexts(canvas.getGraphicsContext2D());
     }
 }
