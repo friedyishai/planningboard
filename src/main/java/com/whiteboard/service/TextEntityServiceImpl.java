@@ -20,7 +20,7 @@ public class TextEntityServiceImpl implements TextEntityService {
 
     @Override
     public TextEntity save(TextEntity textEntity) {
-        return textRepository.save(textEntity);
+        return textRepository.saveAndFlush(textEntity);
     }
 
     @Override

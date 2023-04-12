@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 
 @Data
@@ -62,4 +65,9 @@ public class ShapeEntity {
 
     @Column(nullable = false, columnDefinition = "bit")
     private Boolean isActive;
+
+    @Column(columnDefinition = "datetime")
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
+
 }

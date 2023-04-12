@@ -18,7 +18,6 @@ public class SpringbootWhiteboardApplication extends Application {
     private Parent rootNode;
 
     public static void main(String[] args) {
-
         launch(args);
     }
 

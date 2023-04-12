@@ -19,7 +19,7 @@ public class ShapeEntityServiceImpl implements ShapeEntityService {
 
     @Override
     public ShapeEntity save(ShapeEntity shapeEntity) {
-        return shapeRepository.save(shapeEntity);
+        return shapeRepository.saveAndFlush(shapeEntity);
     }
 
     @Override

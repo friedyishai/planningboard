@@ -12,16 +12,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="524.0" prefWidth="671.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
+<AnchorPane fx:id="anchorPane" prefHeight="441.0" prefWidth="762.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
    <children>
       <Button fx:id="backBtn" layoutX="8.0" layoutY="7.0" mnemonicParsing="false" onAction="#goBack" text="leave" />
       <VBox fx:id="messagesArea" layoutX="6.0" layoutY="407.0" prefHeight="85.0" prefWidth="697.0">
          <children>
-            <ListView fx:id="messagesList" prefHeight="200.0" prefWidth="200.0" />
+            <ListView fx:id="messagesList" prefHeight="85.0" prefWidth="697.0" />
          </children></VBox>
       <Label layoutX="8.0" layoutY="389.0" prefHeight="18.0" prefWidth="66.0" text="Messages" />
-      <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="651.0" />
-      <Button fx:id="sendMessageBtn" layoutX="649.0" layoutY="491.0" minWidth="11.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="11.0" text="send" />
+      <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="647.0" />
+      <Button fx:id="sendMessageBtn" layoutX="649.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="send" />
       <FlowPane layoutX="596.0" prefHeight="307.0" prefWidth="166.0">
          <children>
             <Button fx:id="lineBtn" mnemonicParsing="false" onAction="#createLine" prefHeight="31.0" prefWidth="78.0" text="Line" />
@@ -47,6 +47,7 @@
             <ChoiceBox fx:id="fontChoiceBox" prefWidth="150.0" />
             <Label text="Font Size" />
             <TextField fx:id="fontSizeTextField" />
+            <Button mnemonicParsing="false" onAction="#fontChangeHandle" text="set font size" />
          </children>
       </FlowPane>
       <Canvas fx:id="canvas" height="352.0" layoutY="40.0" width="596.0" />

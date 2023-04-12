@@ -14,10 +14,14 @@ public class Constants {
             BOARD_NAME_IS_REQUIRED = "The board name field is required",
             DEFAULT_COLOR = "#000000",
             DEFAULT_FONT = "Arial",
-            DEFAULT_TEXT = "Text";
+            DEFAULT_TEXT = "Text",
+            SELECTED_ENTITY_COLOR = "#D3D3D3",
+            RABBIT_QUEUE = "Plan-Board-Messages",
+            RABBIT_EXCHANGE = "Plan-Board-Messages";
 
     public static final Integer
-            POINTS_IN_TRIANGLE = 3;
+            POINTS_IN_TRIANGLE = 3,
+            PIX_DIFFERENCE_TO_UPDATE_VIEW = 5;
 
     public static final Double
             DEFAULT_X1 = 50.0,

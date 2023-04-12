@@ -4,10 +4,11 @@ import com.whiteboard.dao.model.ShapeEntity;
 import com.whiteboard.dao.model.TextEntity;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 
 public interface ShapeService {
 
-    void createShapeAndAddToContext(ShapeEntity shapeEntity, GraphicsContext graphicsContext);
+    void init();
 
     void createDefaultLine(GraphicsContext graphicsContext2D);
 
@@ -19,7 +20,13 @@ public interface ShapeService {
 
     void addBoardShapes(GraphicsContext graphicsContext2D);
 
-    void undo(Canvas canvas);
+    void undo();
 
-    void redo(Canvas canvas);
+    void redo();
+
+    ShapeEntity findClickedShape(MouseEvent mouseEvent);
+
+    void updateShapeLocation(ShapeEntity currShapeToHandle, MouseEvent mouseEvent);
+
+    void updateShapeColor(ShapeEntity currShapeToHandle, GraphicsContext graphicsContext2D);
 }

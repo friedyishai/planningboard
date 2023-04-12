@@ -58,6 +58,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByName(username);
     }
 
+    @Override
+    public String getUserById(Integer uid) {
+        return userRepository.findById(uid).get().getName();
+    }
+
     private boolean isEmailAvailable(String email) {
         User userFromDb = userRepository.findByEmail(email);
         return !(isUserExists(userFromDb));

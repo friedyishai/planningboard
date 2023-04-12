@@ -1,7 +1,12 @@
 package com.whiteboard.dao.model;
 
 import jakarta.persistence.*;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @ToString
@@ -37,4 +42,8 @@ public class TextEntity {
 
     @Column(nullable = false, columnDefinition = "bit")
     private Boolean isActive;
+
+    @Column(columnDefinition = "datetime")
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
 }

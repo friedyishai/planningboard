@@ -10,4 +10,6 @@ public interface UserService {
     DBActionResult register(User user);
 
     User findByName(String username);
+
+    String getUserById(Integer uid);
 }

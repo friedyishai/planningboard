@@ -5,5 +5,8 @@ import java.util.List;
 public interface MessageService {
 
     List<String> getMessages();
-    String addMessage(String messageContent);
+
+    void addMessage(String messageContent);
+
+    void init();
 }

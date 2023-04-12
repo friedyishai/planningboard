@@ -23,6 +23,6 @@ public class MessageEntityServiceImpl implements MessageEntityService {
                 .isActive(true)
                 .build();
 
-        return messageRepository.save(messageEntity);
+        return messageRepository.saveAndFlush(messageEntity);
     }
 }

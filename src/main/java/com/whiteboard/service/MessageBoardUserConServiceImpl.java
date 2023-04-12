@@ -30,8 +30,9 @@ public class MessageBoardUserConServiceImpl implements MessageBoardUserConSerivc
                 .messageId(messageId)
                 .boardId(displayedBoard.getBoard().getId())
                 .userId(userSession.getUser().getId())
+                .createDate(LocalDate.now())
                 .build();
 
-        return messageBoardUserConRepository.save(messageBoardUserCon);
+        return messageBoardUserConRepository.saveAndFlush(messageBoardUserCon);
     }
 }
