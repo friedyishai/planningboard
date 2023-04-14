@@ -1,5 +1,6 @@
 package com.whiteboard;
 
+import com.whiteboard.controller.WelcomeController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,7 @@ public class SpringbootWhiteboardApplication extends Application {
 
     private ConfigurableApplicationContext context;
     private Parent rootNode;
+    private FXMLLoader loader;
 
     public static void main(String[] args) {
         launch(args);
@@ -24,16 +26,17 @@ public class SpringbootWhiteboardApplication extends Application {
     @Override
     public void init() throws Exception {
         context = SpringApplication.run(SpringbootWhiteboardApplication.class);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/welcome.fxml"));
+        loader = new FXMLLoader(getClass().getResource("/fxml/welcome.fxml"));
         loader.setControllerFactory(context::getBean);
         rootNode = loader.load();
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage primaryStage) {
+        ((WelcomeController)loader.getController()).setStageOnExit(primaryStage);
         Scene scene = new Scene(rootNode, 800, 600);
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     @Override

@@ -25,5 +25,6 @@ public class ShapeEntityServiceImpl implements ShapeEntityService {
     @Override
     public void remove(ShapeEntity shapeEntity) {
         shapeEntity.setIsActive(false);
+        shapeRepository.saveAndFlush(shapeEntity);
     }
 }

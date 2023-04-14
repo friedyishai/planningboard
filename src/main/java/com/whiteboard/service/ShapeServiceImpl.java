@@ -47,28 +47,56 @@ public class ShapeServiceImpl implements ShapeService {
         setColors(shapeEntity, graphicsContext);
 
         switch (shapeEntity.getShapeType()) {
-            case Rectangle -> graphicsContext.fillRect(
-                    shapeEntity.getX1(),
-                    shapeEntity.getY1(),
-                    shapeEntity.getWidth(),
-                    shapeEntity.getHeight());
-            case Circle -> graphicsContext.fillOval(
-                    shapeEntity.getX1(),
-                    shapeEntity.getY1(),
-                    shapeEntity.getRadiusX(),
-                    shapeEntity.getRadiusY());
-            case Triangle -> graphicsContext.fillPolygon(
-                    new double[]{
-                            shapeEntity.getX1(),
-                            shapeEntity.getX2(),
-                            shapeEntity.getX3()
-                    },
-                    new double[]{
-                            shapeEntity.getY1(),
-                            shapeEntity.getY2(),
-                            shapeEntity.getY3()
-                    },
-                    POINTS_IN_TRIANGLE);
+            case Rectangle -> {
+                graphicsContext.fillRect(
+                        shapeEntity.getX1(),
+                        shapeEntity.getY1(),
+                        shapeEntity.getWidth(),
+                        shapeEntity.getHeight());
+                graphicsContext.strokeRect(
+                        shapeEntity.getX1(),
+                        shapeEntity.getY1(),
+                        shapeEntity.getWidth(),
+                        shapeEntity.getHeight());
+            }
+            case Circle -> {
+                graphicsContext.fillOval(
+                        shapeEntity.getX1(),
+                        shapeEntity.getY1(),
+                        shapeEntity.getRadiusX(),
+                        shapeEntity.getRadiusY());
+                graphicsContext.strokeOval(
+                        shapeEntity.getX1(),
+                        shapeEntity.getY1(),
+                        shapeEntity.getRadiusX(),
+                        shapeEntity.getRadiusY());
+            }
+            case Triangle -> {
+                graphicsContext.fillPolygon(
+                        new double[]{
+                                shapeEntity.getX1(),
+                                shapeEntity.getX2(),
+                                shapeEntity.getX3()
+                        },
+                        new double[]{
+                                shapeEntity.getY1(),
+                                shapeEntity.getY2(),
+                                shapeEntity.getY3()
+                        },
+                        POINTS_IN_TRIANGLE);
+                graphicsContext.strokePolygon(
+                        new double[]{
+                                shapeEntity.getX1(),
+                                shapeEntity.getX2(),
+                                shapeEntity.getX3()
+                        },
+                        new double[]{
+                                shapeEntity.getY1(),
+                                shapeEntity.getY2(),
+                                shapeEntity.getY3()
+                        },
+                        POINTS_IN_TRIANGLE);
+            }
             case Line -> graphicsContext.strokeLine(
                     shapeEntity.getX1(),
                     shapeEntity.getY1(),
@@ -156,7 +184,6 @@ public class ShapeServiceImpl implements ShapeService {
 
         ShapeEntity shapeEntity = undoStack.pop();
         shapeEntityService.remove(shapeEntity);
-        boardShapes.remove(shapeEntity);
         shapeBoardConService.remove(shapeEntity.getId());
         redoStack.push(shapeEntity);
     }
@@ -168,8 +195,8 @@ public class ShapeServiceImpl implements ShapeService {
         }
 
         ShapeEntity shapeEntity = redoStack.pop();
+        shapeEntity.setIsActive(true);
         shapeEntityService.save(shapeEntity);
-        boardShapes.add(shapeEntity);
         shapeBoardConService.save(shapeEntity.getId());
         undoStack.push(shapeEntity);
     }

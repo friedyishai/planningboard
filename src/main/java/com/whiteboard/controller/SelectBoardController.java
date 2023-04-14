@@ -1,6 +1,7 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.Board;
+import com.whiteboard.service.UserService;
 import com.whiteboard.util.DisplayedBoard;
 import com.whiteboard.service.AlertService;
 import com.whiteboard.service.BoardService;
@@ -26,6 +27,7 @@ import static com.whiteboard.constants.Constants.UNSELECTED_BOARD_ERROR_MSG;
 public class SelectBoardController implements Initializable {
 
     private final BoardService boardService;
+    private final UserService userService;
     private final AlertService alertService;
     private final NavigateService navigateService;
     private final DisplayedBoard displayedBoard;
@@ -63,6 +65,7 @@ public class SelectBoardController implements Initializable {
     }
 
     public void goBack(ActionEvent event) {
+        userService.logout();
         navigateService.navigateToLastScreen(event);
     }
 }

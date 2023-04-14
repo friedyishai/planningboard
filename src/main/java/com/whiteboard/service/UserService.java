@@ -12,4 +12,8 @@ public interface UserService {
     User findByName(String username);
 
     String getUserById(Integer uid);
+
+    void logout();
+
+    void saveUser(User user);
 }

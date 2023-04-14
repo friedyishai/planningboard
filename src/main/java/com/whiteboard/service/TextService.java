@@ -14,8 +14,6 @@ public interface TextService {
 
     List<String> getFonts();
 
-    void createDefaultText(GraphicsContext graphicsContext);
-
     void addBoardTexts(GraphicsContext graphicsContext2D);
 
     void undo();
@@ -29,4 +27,8 @@ public interface TextService {
     void updateTextColor(TextEntity currTextToHandle, GraphicsContext graphicsContext2D);
 
     void updateTextFont(TextEntity currTextToHandle, Font font);
+
+    void updateText(TextEntity currTextToHandle, String text);
+
+    void createText(String text, GraphicsContext graphicsContext);
 }

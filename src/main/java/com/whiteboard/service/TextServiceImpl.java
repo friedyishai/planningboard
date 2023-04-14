@@ -44,26 +44,6 @@ public class TextServiceImpl implements TextService {
     }
 
     @Override
-    public void createDefaultText(GraphicsContext graphicsContext) {
-        TextEntity textEntity = TextEntity.builder()
-                .color(graphicsContext.getFill().toString())
-                .font(graphicsContext.getFont().getName())
-                .fontSize(DEFAULT_FONT_SIZE)
-                .startX(DEFAULT_X1)
-                .startY(DEFAULT_Y1)
-                .content(DEFAULT_TEXT)
-                .isActive(true)
-                .build();
-
-        textEntity = textEntityService.save(textEntity);
-        undoStack.push(textEntity);
-        boardTexts.add(textEntity);
-        textBoardConService.save(textEntity.getId());
-
-        addTextToContext(textEntity, graphicsContext);
-    }
-
-    @Override
     public void addBoardTexts(GraphicsContext graphicsContext2D) {
         boardTexts.forEach(textEntity -> addTextToContext(textEntity, graphicsContext2D));
     }
@@ -123,7 +103,33 @@ public class TextServiceImpl implements TextService {
         textEntityService.save(textEntity);
     }
 
-    public void addTextToContext(TextEntity textEntity, GraphicsContext graphicsContext) {
+    @Override
+    public void updateText(TextEntity textEntity, String text) {
+        textEntity.setContent(text);
+        textEntityService.save(textEntity);
+    }
+
+    @Override
+    public void createText(String text, GraphicsContext graphicsContext) {
+        TextEntity textEntity = TextEntity.builder()
+                .color(graphicsContext.getFill().toString())
+                .font(graphicsContext.getFont().getName())
+                .fontSize(DEFAULT_FONT_SIZE)
+                .startX(DEFAULT_X1)
+                .startY(DEFAULT_Y1)
+                .content(text)
+                .isActive(true)
+                .build();
+
+        textEntity = textEntityService.save(textEntity);
+        undoStack.push(textEntity);
+        boardTexts.add(textEntity);
+        textBoardConService.save(textEntity.getId());
+
+        addTextToContext(textEntity, graphicsContext);
+    }
+
+    private void addTextToContext(TextEntity textEntity, GraphicsContext graphicsContext) {
         graphicsContext.setFont(Font.font(textEntity.getFont(), textEntity.getFontSize()));
         graphicsContext.setFill(Paint.valueOf(textEntity.getColor()));
         graphicsContext.fillText(textEntity.getContent(), textEntity.getStartX(), textEntity.getStartY());

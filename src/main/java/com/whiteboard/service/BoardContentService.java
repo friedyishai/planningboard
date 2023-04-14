@@ -1,5 +1,6 @@
 package com.whiteboard.service;
 
+import com.whiteboard.enums.RabbitMessageTypeEnum;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,26 +28,32 @@ public class BoardContentService {
         this.messageList = messagesList;
     }
 
-    public void setBoardContent() {
+    public void setBoardContent(RabbitMessageTypeEnum rabbitMessageTypeEnum) {
+
         if (null == this.canvas) {
             return;
         }
 
-        GraphicsContext gc = offScreenCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, offScreenCanvas.getWidth(), offScreenCanvas.getHeight());
+        if (rabbitMessageTypeEnum.equals(RabbitMessageTypeEnum.Message)) {
+            messageService.init();
+            Platform.runLater(() -> {
+                messageList.getItems().clear();
+                messageList.getItems().addAll(messageService.getMessages());
+                messageList.scrollTo(messageList.getItems().size() - 1);
+            });
+        } else {
+            GraphicsContext gc = offScreenCanvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, offScreenCanvas.getWidth(), offScreenCanvas.getHeight());
 
-        shapeService.init();
-        textService.init();
-        messageService.init();
+            shapeService.init();
+            textService.init();
 
-        shapeService.addBoardShapes(offScreenCanvas.getGraphicsContext2D());
-        textService.addBoardTexts(offScreenCanvas.getGraphicsContext2D());
+            shapeService.addBoardShapes(offScreenCanvas.getGraphicsContext2D());
+            textService.addBoardTexts(offScreenCanvas.getGraphicsContext2D());
 
-        Platform.runLater(() -> {
-            canvas.getGraphicsContext2D().drawImage(offScreenCanvas.snapshot(null, null), 0, 0);
-            messageList.getItems().clear();
-            messageList.getItems().addAll(messageService.getMessages());
-            messageList.scrollTo(messageList.getItems().size() - 1);
-        });
+            Platform.runLater(() -> {
+                canvas.getGraphicsContext2D().drawImage(offScreenCanvas.snapshot(null, null), 0, 0);
+            });
+        }
     }
 }

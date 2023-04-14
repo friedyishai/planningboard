@@ -69,6 +69,8 @@ public class UserController {
 
     private void handleSuccess(ActionEvent event, String username) {
         User user = userService.findByName(username);
+        user.setIsActive(true);
+        userService.saveUser(user);
         userSession.setUser(user);
         navigateService.navigateToScreen(event, "select-board.fxml");
     }

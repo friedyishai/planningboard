@@ -6,50 +6,51 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="441.0" prefWidth="762.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
+<AnchorPane fx:id="anchorPane" prefHeight="522.0" prefWidth="1107.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
    <children>
       <Button fx:id="backBtn" layoutX="8.0" layoutY="7.0" mnemonicParsing="false" onAction="#goBack" text="leave" />
-      <VBox fx:id="messagesArea" layoutX="6.0" layoutY="407.0" prefHeight="85.0" prefWidth="697.0">
+      <VBox fx:id="messagesArea" layoutX="6.0" layoutY="407.0" prefHeight="85.0" prefWidth="883.0">
          <children>
-            <ListView fx:id="messagesList" prefHeight="85.0" prefWidth="697.0" />
+            <ListView fx:id="messagesList" prefHeight="85.0" prefWidth="896.0" />
          </children></VBox>
       <Label layoutX="8.0" layoutY="389.0" prefHeight="18.0" prefWidth="66.0" text="Messages" />
-      <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="647.0" />
-      <Button fx:id="sendMessageBtn" layoutX="649.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="send" />
-      <FlowPane layoutX="596.0" prefHeight="307.0" prefWidth="166.0">
+      <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="892.0" />
+      <Button fx:id="sendMessageBtn" layoutX="889.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="send" />
+      <Canvas fx:id="canvas" height="351.0" layoutX="8.0" layoutY="38.0" width="935.0" />
+      <AnchorPane layoutX="956.0" layoutY="3.0" prefHeight="469.0" prefWidth="151.0">
          <children>
-            <Button fx:id="lineBtn" mnemonicParsing="false" onAction="#createLine" prefHeight="31.0" prefWidth="78.0" text="Line" />
-            <Button fx:id="circleBtn" mnemonicParsing="false" onAction="#createCircle" prefWidth="78.0" text="Circle" />
-            <Button fx:id="rectangleBtn" mnemonicParsing="false" onAction="#createRectangle" prefWidth="78.0" text="Rectangle" />
-            <Button fx:id="triangleBtn" mnemonicParsing="false" onAction="#createTriangle" prefWidth="78.0" text="Triangle" />
-            <Button fx:id="redoBtn" mnemonicParsing="false" onAction="#redo" prefHeight="31.0" prefWidth="78.0" text="Redo" />
-            <Button fx:id="undoBtn" mnemonicParsing="false" onAction="#undo" prefWidth="78.0" text="Undo" />
-            <Button fx:id="txtBtn" mnemonicParsing="false" onAction="#createText" prefHeight="31.0" prefWidth="156.0" text="Text" />
-            <Label text="Fill" />
-            <ColorPicker fx:id="fillColor" onAction="#fillColorChangedHandle" prefHeight="27.0" prefWidth="166.0">
+            <Button fx:id="txtBtn" layoutX="1.0" layoutY="440.0" mnemonicParsing="false" onAction="#createText" prefHeight="31.0" prefWidth="150.0" text="Add Text" />
+            <TextArea fx:id="addTextArea" layoutX="1.0" layoutY="350.0" prefHeight="89.0" prefWidth="150.0" />
+            <Button layoutX="1.0" layoutY="327.0" mnemonicParsing="false" onAction="#fontChangeHandle" prefHeight="31.0" prefWidth="150.0" text="set font size" />
+            <TextField fx:id="fontSizeTextField" layoutX="1.0" layoutY="302.0" prefWidth="150.0" />
+            <Label layoutX="1.0" layoutY="284.0" text="Font Size" />
+            <ChoiceBox fx:id="fontChoiceBox" layoutX="1.0" layoutY="249.0" prefHeight="27.0" prefWidth="150.0" />
+            <Label layoutX="1.0" layoutY="219.0" text="Font" />
+            <ColorPicker fx:id="strokeColor" layoutX="1.0" layoutY="188.0" onAction="#outlineColorChangedHandle" prefHeight="27.0" prefWidth="151.0">
                <value>
                   <Color />
                </value>
             </ColorPicker>
-            <Label text="Outline" />
-            <ColorPicker fx:id="strokeColor" onAction="#outlineColorChangedHandle" prefHeight="27.0" prefWidth="155.0">
+            <Label layoutX="1.0" layoutY="163.0" prefHeight="18.0" prefWidth="84.0" text="Stroke Color" />
+            <ColorPicker fx:id="fillColor" layoutX="1.0" layoutY="126.0" onAction="#fillColorChangedHandle" prefHeight="27.0" prefWidth="150.0">
                <value>
                   <Color />
                </value>
             </ColorPicker>
-            <Label text="Font" />
-            <ChoiceBox fx:id="fontChoiceBox" prefWidth="150.0" />
-            <Label text="Font Size" />
-            <TextField fx:id="fontSizeTextField" />
-            <Button mnemonicParsing="false" onAction="#fontChangeHandle" text="set font size" />
+            <Label layoutX="1.0" layoutY="98.0" prefHeight="18.0" prefWidth="66.0" text="Fill Color" />
+            <Button fx:id="lineBtn" layoutX="1.0" layoutY="-2.0" mnemonicParsing="false" onAction="#createLine" prefHeight="30.0" prefWidth="75.0" text="Line" />
+            <Button fx:id="circleBtn" layoutX="76.0" layoutY="-2.0" mnemonicParsing="false" onAction="#createCircle" prefHeight="30.0" prefWidth="75.0" text="Circle" />
+            <Button fx:id="triangleBtn" layoutX="1.0" layoutY="29.0" mnemonicParsing="false" onAction="#createTriangle" prefHeight="30.0" prefWidth="75.0" text="Triangle" />
+            <Button fx:id="rectangleBtn" layoutX="76.0" layoutY="29.0" mnemonicParsing="false" onAction="#createRectangle" prefHeight="30.0" prefWidth="75.0" text="Rectangle" />
+            <Button fx:id="redoBtn" layoutX="1.0" layoutY="58.0" mnemonicParsing="false" onAction="#redo" prefHeight="30.0" prefWidth="78.0" text="Redo" />
+            <Button fx:id="undoBtn" layoutX="76.0" layoutY="58.0" mnemonicParsing="false" onAction="#undo" prefHeight="30.0" prefWidth="75.0" text="Undo" />
          </children>
-      </FlowPane>
-      <Canvas fx:id="canvas" height="352.0" layoutY="40.0" width="596.0" />
+      </AnchorPane>
    </children>
 </AnchorPane>

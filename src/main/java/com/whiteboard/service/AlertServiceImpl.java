@@ -23,4 +23,9 @@ public class AlertServiceImpl implements AlertService {
         Alert alert = createErrorAlert(alertContent);
         alert.show();
     }
+
+    @Override
+    public Alert createConfirmAlert(String message) {
+        return new Alert(Alert.AlertType.CONFIRMATION, message);
+    }
 }

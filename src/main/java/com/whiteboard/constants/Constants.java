@@ -4,6 +4,7 @@ public class Constants {
 
     public static final String
             INCORRECT_USERNAME_OR_PASSWORD = "The username or password is incorrect.",
+            USER_ALREADY_LOG_IN = "The user is already log in, please logout first",
             UNAVAILABLE_USER_NAME = "The username is already taken.",
             UNAVAILABLE_EMAIL = "The email is already taken.",
             ERROR = "error",
@@ -17,11 +18,12 @@ public class Constants {
             DEFAULT_TEXT = "Text",
             SELECTED_ENTITY_COLOR = "#D3D3D3",
             RABBIT_QUEUE = "Plan-Board-Messages",
-            RABBIT_EXCHANGE = "Plan-Board-Messages";
+            RABBIT_EXCHANGE = "Plan-Board-Messages",
+            BEFORE_EXIT_MESSAGE = "Are you sure you want to exit?";
 
     public static final Integer
             POINTS_IN_TRIANGLE = 3,
-            PIX_DIFFERENCE_TO_UPDATE_VIEW = 5;
+            PIX_DIFFERENCE_TO_UPDATE_VIEW = 7;
 
     public static final Double
             DEFAULT_X1 = 50.0,

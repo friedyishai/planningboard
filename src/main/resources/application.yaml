@@ -11,4 +11,6 @@ spring:
     username: guest
     password: guest
     port: 5672
+    connectionTimeout: 3000
+    replyTimeout: 5000
 

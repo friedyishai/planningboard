@@ -3,28 +3,26 @@ package com.whiteboard.controller;
 import com.whiteboard.dao.model.ShapeEntity;
 import com.whiteboard.dao.model.TextEntity;
 import com.whiteboard.enums.EntityEnum;
+import com.whiteboard.enums.RabbitMessageTypeEnum;
 import com.whiteboard.rabbitmq.RabbitSender;
 import com.whiteboard.service.*;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.Message;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Stack;
 
 import static com.whiteboard.constants.Constants.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class BoardController {
@@ -47,10 +45,13 @@ public class BoardController {
     private ColorPicker strokeColor;
     @FXML
     private Canvas canvas;
+    private GraphicsContext canvasGraphicContext;
     @FXML
     private ChoiceBox<String> fontChoiceBox;
     @FXML
     private TextField fontSizeTextField;
+    @FXML
+    private TextArea addTextArea;
 
     private final Stack<EntityEnum> undoStack = new Stack<>();
     private final Stack<EntityEnum> redoStack = new Stack<>();
@@ -64,9 +65,11 @@ public class BoardController {
 
     @FXML
     public void initialize() {
+        canvasGraphicContext = this.canvas.getGraphicsContext2D();
         offScreenCanvas = new Canvas(canvas.getWidth(), canvas.getHeight());
+        canvasGraphicContext.setLineWidth(DEFAULT_STROKE_WIDTH);
         initFonts();
-        setColors();
+        setColors(Paint.valueOf(DEFAULT_COLOR), Paint.valueOf(DEFAULT_COLOR));
         setCanvasEvents();
         initServices();
         setBoardContent();
@@ -76,12 +79,12 @@ public class BoardController {
         this.canvas.setOnMousePressed(mouseEvent -> {
 
             if (!(isShapeToHandleNull())) {
-                canvas.getGraphicsContext2D().setFill(Paint.valueOf(currShapeToHandleOrigColor));
-                shapeService.updateShapeColor(currShapeToHandle, canvas.getGraphicsContext2D());
+                canvasGraphicContext.setFill(Paint.valueOf(currShapeToHandleOrigColor));
+                shapeService.updateShapeColor(currShapeToHandle, canvasGraphicContext);
                 sendRabbitMessage();
             } else if (!(isTextToHandleNull())) {
-                canvas.getGraphicsContext2D().setFill(Paint.valueOf(currTextToHandleOrigColor));
-                textService.updateTextColor(currTextToHandle, canvas.getGraphicsContext2D());
+                canvasGraphicContext.setFill(Paint.valueOf(currTextToHandleOrigColor));
+                textService.updateTextColor(currTextToHandle, canvasGraphicContext);
                 sendRabbitMessage();
             }
 
@@ -104,12 +107,12 @@ public class BoardController {
 
             if (!(isShapeToHandleNull())) {
                 currShapeToHandleOrigColor = currShapeToHandle.getFillColor();
-                this.canvas.getGraphicsContext2D().setFill(Paint.valueOf(SELECTED_ENTITY_COLOR));
-                shapeService.updateShapeColor(currShapeToHandle, canvas.getGraphicsContext2D());
+                canvasGraphicContext.setFill(Paint.valueOf(SELECTED_ENTITY_COLOR));
+                shapeService.updateShapeColor(currShapeToHandle, canvasGraphicContext);
             } else {
                 currTextToHandleOrigColor = currTextToHandle.getColor();
-                this.canvas.getGraphicsContext2D().setFill(Paint.valueOf(SELECTED_ENTITY_COLOR));
-                textService.updateTextColor(currTextToHandle, canvas.getGraphicsContext2D());
+                this.canvasGraphicContext.setFill(Paint.valueOf(SELECTED_ENTITY_COLOR));
+                textService.updateTextColor(currTextToHandle, canvasGraphicContext);
             }
 
             sendRabbitMessage();
@@ -122,7 +125,7 @@ public class BoardController {
 
             pixDiffCount++;
 
-            if (isTimeToUpdateView() && !(isShapeToHandleNull())) {
+            if (!(isShapeToHandleNull()) && isTimeToUpdateView()) {
                 this.shapeService.updateShapeLocation(currShapeToHandle, mouseEvent);
                 sendRabbitMessage();
             } else if (isTimeToUpdateView()) {
@@ -137,10 +140,6 @@ public class BoardController {
         });
     }
 
-    private boolean isTimeToUpdateView() {
-        return pixDiffCount % PIX_DIFFERENCE_TO_UPDATE_VIEW == 0;
-    }
-
     public void goBack(ActionEvent event) {
         boardUserConService.removeUserFromBoard();
         navigateService.navigateToLastScreen(event);
@@ -148,25 +147,25 @@ public class BoardController {
 
     public void createLine(ActionEvent event) {
         undoStack.push(EntityEnum.SHAPE);
-        shapeService.createDefaultLine(canvas.getGraphicsContext2D());
+        shapeService.createDefaultLine(canvasGraphicContext);
         sendRabbitMessage();
     }
 
     public void createCircle(ActionEvent event) {
         undoStack.push(EntityEnum.SHAPE);
-        shapeService.createDefaultCircle(canvas.getGraphicsContext2D());
+        shapeService.createDefaultCircle(canvasGraphicContext);
         sendRabbitMessage();
     }
 
     public void createRectangle(ActionEvent event) {
         undoStack.push(EntityEnum.SHAPE);
-        shapeService.createDefaultRectangle(canvas.getGraphicsContext2D());
+        shapeService.createDefaultRectangle(canvasGraphicContext);
         sendRabbitMessage();
     }
 
     public void createTriangle(ActionEvent event) {
         undoStack.push(EntityEnum.SHAPE);
-        shapeService.createDefaultTriangle(canvas.getGraphicsContext2D());
+        shapeService.createDefaultTriangle(canvasGraphicContext);
         sendRabbitMessage();
     }
 
@@ -205,11 +204,11 @@ public class BoardController {
     }
 
     public void fillColorChangedHandle(ActionEvent event) {
-        setColors();
+        setColors(fillColor.getValue(), canvasGraphicContext.getStroke());
     }
 
     public void outlineColorChangedHandle(ActionEvent event) {
-        setColors();
+        setColors(canvasGraphicContext.getFill(), strokeColor.getValue());
     }
 
     public void fontChangeHandle(ActionEvent event) {
@@ -223,12 +222,14 @@ public class BoardController {
 
         Font font = Font.font(fontChoiceBox.getValue(), fontSize);
 
-        canvas.getGraphicsContext2D().setFont(font);
+        canvasGraphicContext.setFont(font);
 
         if (!(isTextToHandleNull())) {
             textService.updateTextFont(currTextToHandle, font);
             sendRabbitMessage();
         }
+
+        fontSizeTextField.setText("");
     }
 
     public void createMessage(ActionEvent event) {
@@ -240,34 +241,44 @@ public class BoardController {
         }
 
         messageService.addMessage(messageContent);
-        sendRabbitMessage();
+        sendRabbitMessage(RabbitMessageTypeEnum.Message);
     }
 
     public void createText(ActionEvent event) {
+        if (addTextArea.getText().isEmpty()) {
+            return;
+        }
+
+        if (!(isTextToHandleNull())) {
+            textService.updateText(currTextToHandle, addTextArea.getText());
+        } else {
+            textService.createText(addTextArea.getText(), canvasGraphicContext);
+        }
+
+        addTextArea.setText("");
         undoStack.push(EntityEnum.TEXT);
-        textService.createDefaultText(canvas.getGraphicsContext2D());
         sendRabbitMessage();
     }
 
     private void initFonts() {
         fontChoiceBox.getItems().addAll(textService.getFonts());
         fontChoiceBox.setValue(fontChoiceBox.getItems().get(0));
-        canvas.getGraphicsContext2D().setFont(Font.font(fontChoiceBox.getValue(), DEFAULT_FONT_SIZE));
+        canvasGraphicContext.setFont(Font.font(fontChoiceBox.getValue(), DEFAULT_FONT_SIZE));
     }
 
-    private void setColors() {
-        canvas.getGraphicsContext2D().setFill(fillColor.getValue());
-        canvas.getGraphicsContext2D().setStroke(strokeColor.getValue());
+    private void setColors(Paint fillColor, Paint strokeColor) {
+        canvasGraphicContext.setFill(fillColor);
+        canvasGraphicContext.setStroke(strokeColor);
 
         if (isShapeToHandleNull() && isTextToHandleNull()) {
             return;
         }
 
         if (!(isShapeToHandleNull())) {
-            shapeService.updateShapeColor(currShapeToHandle, this.canvas.getGraphicsContext2D());
+            shapeService.updateShapeColor(currShapeToHandle, this.canvasGraphicContext);
             currShapeToHandleOrigColor = currShapeToHandle.getFillColor();
         } else {
-            textService.updateTextColor(currTextToHandle, this.canvas.getGraphicsContext2D());
+            textService.updateTextColor(currTextToHandle, this.canvasGraphicContext);
             currTextToHandleOrigColor = currTextToHandle.getColor();
         }
 
@@ -297,11 +308,21 @@ public class BoardController {
     private void setBoardContent() {
         boardUserConService.addUserToBoard();
         messagesList.getItems().addAll(messageService.getMessages());
-        shapeService.addBoardShapes(canvas.getGraphicsContext2D());
-        textService.addBoardTexts(canvas.getGraphicsContext2D());
+        shapeService.addBoardShapes(canvasGraphicContext);
+        textService.addBoardTexts(canvasGraphicContext);
     }
 
-    private void sendRabbitMessage() {
-        this.rabbitSender.sendMessage(new Message(new byte[]{}));
+    private boolean isTimeToUpdateView() {
+        return pixDiffCount % PIX_DIFFERENCE_TO_UPDATE_VIEW == 0;
+    }
+
+    private void sendRabbitMessage(RabbitMessageTypeEnum... rabbitMessageTypeEnum) {
+        try {
+            RabbitMessageTypeEnum typeEnum = rabbitMessageTypeEnum.length > 0 ?
+                    rabbitMessageTypeEnum[0] : RabbitMessageTypeEnum.Board;
+            this.rabbitSender.sendMessage(typeEnum);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }
