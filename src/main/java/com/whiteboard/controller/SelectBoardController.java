@@ -1,11 +1,11 @@
 package com.whiteboard.controller;
 
 import com.whiteboard.dao.model.Board;
-import com.whiteboard.service.UserService;
-import com.whiteboard.util.DisplayedBoard;
-import com.whiteboard.service.AlertService;
-import com.whiteboard.service.BoardService;
-import com.whiteboard.service.NavigateService;
+import com.whiteboard.service.board.BoardService;
+import com.whiteboard.service.user.UserService;
+import com.whiteboard.service.utils.AlertService;
+import com.whiteboard.service.utils.NavigateService;
+import com.whiteboard.singletons.DisplayedBoard;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import static com.whiteboard.constants.Constants.UNSELECTED_BOARD_ERROR_MSG;
+import static com.whiteboard.constants.AppMessages.UNSELECTED_BOARD_ERROR_MSG;
+import static com.whiteboard.constants.Constants.BOARD_PAGE;
+import static com.whiteboard.constants.Constants.NEW_BOARD_PAGE;
 
 @Component
 @RequiredArgsConstructor
@@ -40,32 +42,40 @@ public class SelectBoardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Board> boardsList = boardService.getAllBoards();
-        boardsListView.getItems().addAll(boardsList.stream().map(Board::getName).collect(Collectors.toList()));
-        boardsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        boardsListView.getSelectionModel().selectedIndexProperty().addListener(
-                (observable, oldValue, newValue) -> goToBoardBtn.setDisable(newValue.intValue() == -1)
-        );
+        initBoardsList();
+        setOnSelectBoardHandle();
     }
 
     public void goToBoardBtnClickedHandle(ActionEvent event) {
         String selectedBoardName = boardsListView.getSelectionModel().getSelectedItem();
 
-        if (selectedBoardName != null) {
+        if (null != selectedBoardName) {
             Board selectedBoard = boardService.getBoardByName(selectedBoardName);
             displayedBoard.setBoard(selectedBoard);
-            navigateService.navigateToScreen(event, "board.fxml");
+            navigateService.navigateToScreen(event, BOARD_PAGE);
         } else {
             alertService.displayErrorAlert(UNSELECTED_BOARD_ERROR_MSG);
         }
     }
 
     public void showNewBoardForm(ActionEvent event) {
-        this.navigateService.navigateToScreen(event, "new-board.fxml");
+        this.navigateService.navigateToScreen(event, NEW_BOARD_PAGE);
     }
 
     public void goBack(ActionEvent event) {
         userService.logout();
         navigateService.navigateToLastScreen(event);
+    }
+
+    private void initBoardsList() {
+        boardsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        List<Board> boardsList = boardService.getAllBoards();
+        boardsListView.getItems().addAll(boardsList.stream().map(Board::getName).collect(Collectors.toList()));
+    }
+
+    private void setOnSelectBoardHandle() {
+        boardsListView.getSelectionModel().selectedIndexProperty().addListener(
+                (observable, oldValue, newValue) -> goToBoardBtn.setDisable(newValue.intValue() == -1)
+        );
     }
 }

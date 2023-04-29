@@ -26,4 +26,8 @@ public class MessageEntity {
 
     @Column(nullable = false, columnDefinition = "bit")
     private Boolean isActive;
+
+    @Column(columnDefinition = "datetime")
+    @CreatedDate
+    private LocalDateTime createDate;
 }

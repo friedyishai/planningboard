@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @ToString
@@ -29,7 +30,7 @@ public class MessageBoardUserCon {
     @Column(nullable = false)
     private Integer userId;
 
-    @Column(columnDefinition = "date")
+    @Column(columnDefinition = "datetime")
     @CreatedDate
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 }

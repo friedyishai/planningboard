@@ -60,6 +60,9 @@ public class ShapeEntity {
     @Column(nullable = false, columnDefinition = "varchar(25)")
     private String fillColor;
 
+    @Column(columnDefinition = "bit")
+    private Boolean displayOrigColor;
+
     @Column(nullable = false, columnDefinition = "varchar(25)")
     private String strokeColor;
 
@@ -69,5 +72,4 @@ public class ShapeEntity {
     @Column(columnDefinition = "datetime")
     @UpdateTimestamp
     private LocalDateTime updateDate;
-
 }

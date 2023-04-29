@@ -34,6 +34,9 @@ public class TextEntity {
     @Column(nullable = false, columnDefinition = "varchar(25)")
     private String color;
 
+    @Column(nullable = false, columnDefinition = "bit")
+    private Boolean displayOrigColor;
+
     @Column(nullable = false, columnDefinition = "varchar(25)")
     private String font;
 

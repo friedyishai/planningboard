@@ -13,4 +13,7 @@ spring:
     port: 5672
     connectionTimeout: 3000
     replyTimeout: 5000
+  security:
+    encrypt-algorithm: AES
+    secret-key: mySecretKey
 

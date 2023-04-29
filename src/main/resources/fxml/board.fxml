@@ -8,49 +8,115 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="522.0" prefWidth="1107.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
+<AnchorPane fx:id="anchorPane" prefHeight="525.0" prefWidth="0.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
    <children>
-      <Button fx:id="backBtn" layoutX="8.0" layoutY="7.0" mnemonicParsing="false" onAction="#goBack" text="leave" />
-      <VBox fx:id="messagesArea" layoutX="6.0" layoutY="407.0" prefHeight="85.0" prefWidth="883.0">
+      <Button fx:id="backBtn" layoutX="8.0" layoutY="7.0" mnemonicParsing="false" onAction="#goBack" text="leave">
+         <effect>
+            <Glow />
+         </effect></Button>
+      <VBox fx:id="messagesArea" layoutX="-2.0" layoutY="407.0" prefHeight="85.0" prefWidth="754.0">
          <children>
-            <ListView fx:id="messagesList" prefHeight="85.0" prefWidth="896.0" />
+            <ListView fx:id="messagesList" prefHeight="85.0" prefWidth="765.0" />
          </children></VBox>
       <Label layoutX="8.0" layoutY="389.0" prefHeight="18.0" prefWidth="66.0" text="Messages" />
-      <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="892.0" />
-      <Button fx:id="sendMessageBtn" layoutX="889.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="send" />
-      <Canvas fx:id="canvas" height="351.0" layoutX="8.0" layoutY="38.0" width="935.0" />
-      <AnchorPane layoutX="956.0" layoutY="3.0" prefHeight="469.0" prefWidth="151.0">
+      <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="754.0" />
+      <Button fx:id="sendMessageBtn" layoutX="754.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="send">
+         <effect>
+            <Glow />
+         </effect></Button>
+      <Canvas fx:id="canvas" height="340.0" layoutX="8.0" layoutY="53.0" width="808.0">
+         <effect>
+            <Glow />
+         </effect></Canvas>
+      <AnchorPane layoutX="817.0" layoutY="3.0" prefHeight="494.0" prefWidth="153.0">
          <children>
-            <Button fx:id="txtBtn" layoutX="1.0" layoutY="440.0" mnemonicParsing="false" onAction="#createText" prefHeight="31.0" prefWidth="150.0" text="Add Text" />
-            <TextArea fx:id="addTextArea" layoutX="1.0" layoutY="350.0" prefHeight="89.0" prefWidth="150.0" />
-            <Button layoutX="1.0" layoutY="327.0" mnemonicParsing="false" onAction="#fontChangeHandle" prefHeight="31.0" prefWidth="150.0" text="set font size" />
-            <TextField fx:id="fontSizeTextField" layoutX="1.0" layoutY="302.0" prefWidth="150.0" />
-            <Label layoutX="1.0" layoutY="284.0" text="Font Size" />
-            <ChoiceBox fx:id="fontChoiceBox" layoutX="1.0" layoutY="249.0" prefHeight="27.0" prefWidth="150.0" />
-            <Label layoutX="1.0" layoutY="219.0" text="Font" />
-            <ColorPicker fx:id="strokeColor" layoutX="1.0" layoutY="188.0" onAction="#outlineColorChangedHandle" prefHeight="27.0" prefWidth="151.0">
+            <Button fx:id="txtBtn" layoutX="1.0" layoutY="390.0" mnemonicParsing="false" onAction="#createText" prefHeight="32.5" prefWidth="153.0" text="Add Text">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <TextArea fx:id="addTextArea" layoutX="1.0" layoutY="293.0" prefHeight="94.0" prefWidth="150.0" />
+            <Label layoutX="1.0" layoutY="245.0" text="Font Size" />
+            <ChoiceBox fx:id="fontChoiceBox" layoutX="1.0" layoutY="214.0" onAction="#fontFamilyChangeHandle" prefHeight="27.0" prefWidth="150.0" />
+            <Label layoutX="1.0" layoutY="195.0" text="Font" />
+            <ColorPicker fx:id="strokeColor" layoutX="1.0" layoutY="163.0" onAction="#strokeColorChangedHandle" prefHeight="27.0" prefWidth="151.0">
                <value>
                   <Color />
                </value>
             </ColorPicker>
-            <Label layoutX="1.0" layoutY="163.0" prefHeight="18.0" prefWidth="84.0" text="Stroke Color" />
-            <ColorPicker fx:id="fillColor" layoutX="1.0" layoutY="126.0" onAction="#fillColorChangedHandle" prefHeight="27.0" prefWidth="150.0">
+            <Label layoutX="1.0" layoutY="144.0" prefHeight="18.0" prefWidth="84.0" text="Stroke Color" />
+            <ColorPicker fx:id="fillColor" layoutX="1.0" layoutY="112.0" onAction="#fillColorChangedHandle" prefHeight="27.0" prefWidth="150.0">
                <value>
                   <Color />
                </value>
             </ColorPicker>
-            <Label layoutX="1.0" layoutY="98.0" prefHeight="18.0" prefWidth="66.0" text="Fill Color" />
-            <Button fx:id="lineBtn" layoutX="1.0" layoutY="-2.0" mnemonicParsing="false" onAction="#createLine" prefHeight="30.0" prefWidth="75.0" text="Line" />
-            <Button fx:id="circleBtn" layoutX="76.0" layoutY="-2.0" mnemonicParsing="false" onAction="#createCircle" prefHeight="30.0" prefWidth="75.0" text="Circle" />
-            <Button fx:id="triangleBtn" layoutX="1.0" layoutY="29.0" mnemonicParsing="false" onAction="#createTriangle" prefHeight="30.0" prefWidth="75.0" text="Triangle" />
-            <Button fx:id="rectangleBtn" layoutX="76.0" layoutY="29.0" mnemonicParsing="false" onAction="#createRectangle" prefHeight="30.0" prefWidth="75.0" text="Rectangle" />
-            <Button fx:id="redoBtn" layoutX="1.0" layoutY="58.0" mnemonicParsing="false" onAction="#redo" prefHeight="30.0" prefWidth="78.0" text="Redo" />
-            <Button fx:id="undoBtn" layoutX="76.0" layoutY="58.0" mnemonicParsing="false" onAction="#undo" prefHeight="30.0" prefWidth="75.0" text="Undo" />
+            <Label layoutX="1.0" layoutY="94.0" prefHeight="18.0" prefWidth="66.0" text="Fill Color" />
+            <Button fx:id="lineBtn" layoutX="1.0" layoutY="-2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createLine" prefHeight="30.0" prefWidth="74.5" text="Line">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="circleBtn" layoutX="76.0" layoutY="-2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createCircle" prefHeight="30.0" prefWidth="74.5" text="Circle">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="triangleBtn" layoutX="1.0" layoutY="29.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createTriangle" prefHeight="30.0" prefWidth="74.5" text="Triangle">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="rectangleBtn" layoutX="76.0" layoutY="29.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createRectangle" prefHeight="30.0" prefWidth="74.5" text="Rectangle">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="redoBtn" layoutX="1.0" layoutY="61.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#redo" prefHeight="30.0" prefWidth="74.5" text="Redo">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="undoBtn" layoutX="76.0" layoutY="61.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#undo" prefHeight="30.0" prefWidth="74.5" text="Undo">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button layoutX="1.0" layoutY="459.0" mnemonicParsing="false" onAction="#deletePressedHandle" prefHeight="41.0" prefWidth="153.0" text="Delete">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="txtBtn1" layoutX="1.0" layoutY="424.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updateText" prefHeight="32.5" prefWidth="153.0" text="Update Text">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <ChoiceBox fx:id="fontSizeChoiceBox" layoutX="1.0" layoutY="264.0" onAction="#fontSizeChangeHandle" prefHeight="27.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
+      <ChoiceBox fx:id="radiusxChoiceBox" layoutX="429.0" layoutY="25.0" maxHeight="150.0" minHeight="23.0" minWidth="58.0" onAction="#circleRadiusXChangedHandle" prefHeight="23.0" prefWidth="58.0" />
+      <ChoiceBox fx:id="radiusyChoiseBox" layoutX="492.0" layoutY="25.0" maxHeight="150.0" minHeight="23.0" onAction="#circleRadiusYChangedHandle" prefHeight="23.0" prefWidth="58.0" />
+      <ChoiceBox fx:id="startxChoiceBox" layoutX="557.0" layoutY="25.0" maxHeight="150.0" minHeight="23.0" onAction="#lineStartXChangedHandle" prefHeight="23.0" prefWidth="58.0" />
+      <ChoiceBox fx:id="startyChoiceBox" layoutX="622.0" layoutY="25.0" maxHeight="150.0" minHeight="23.0" onAction="#lineStartYChangedHandle" prefHeight="23.0" prefWidth="58.0" />
+      <ChoiceBox fx:id="endxChoiceBox" layoutX="687.0" layoutY="25.0" maxHeight="150.0" minHeight="23.0" onAction="#lineEndXChangedHandle" prefHeight="23.0" prefWidth="58.0" />
+      <ChoiceBox fx:id="endyChoiceBox" layoutX="752.0" layoutY="25.0" maxHeight="150.0" minHeight="23.0" onAction="#lineEndYChangedHandle" prefHeight="23.0" prefWidth="58.0" />
+      <Label layoutX="362.0" layoutY="7.0" text="Height" />
+      <Label layoutX="622.0" layoutY="7.0" text="StartY" />
+      <Label layoutX="557.0" layoutY="7.0" text="StartX" />
+      <Label layoutX="492.0" layoutY="7.0" text="RadiusY" />
+      <Label layoutX="429.0" layoutY="7.0" text="RadiusX" />
+      <Label layoutX="297.0" layoutY="7.0" text="Width">
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <ChoiceBox fx:id="heightChoiceBox" layoutX="362.0" layoutY="25.0" minHeight="23.0" onAction="#polygonHeightChangeHandle" prefHeight="23.0" prefWidth="58.0" />
+      <ChoiceBox fx:id="widthChoiceBox" layoutX="297.0" layoutY="25.0" minHeight="23.0" onAction="#polygonWidthChangeHandle" prefHeight="23.0" prefWidth="58.0" />
+      <Label layoutX="687.0" layoutY="7.0" text="EndX">
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
+      <Label layoutX="752.0" layoutY="7.0" text="EndY">
+         <effect>
+            <Glow />
+         </effect>
+      </Label>
    </children>
 </AnchorPane>
