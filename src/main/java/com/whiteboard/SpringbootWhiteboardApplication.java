@@ -41,6 +41,7 @@ public class SpringbootWhiteboardApplication extends Application {
         primaryStage.setScene(scene);
         Image icon = new Image("/icon/" + APP_ICON);
         primaryStage.getIcons().add(icon);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

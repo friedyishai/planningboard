@@ -9,6 +9,7 @@ import com.whiteboard.singletons.PrimaryStage;
 import com.whiteboard.singletons.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

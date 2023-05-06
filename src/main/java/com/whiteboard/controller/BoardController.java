@@ -244,7 +244,6 @@ public class BoardController {
 
         textService.updateTextFont(currTextToHandle, font);
         sendRabbitMessage(RabbitMessageTypeEnum.Text);
-        setEntityToHandleOrigColor();
     }
 
     public void createMessage() {
@@ -285,8 +284,7 @@ public class BoardController {
 
         textService.updateText(currTextToHandle, addTextArea.getText());
         sendRabbitMessage(RabbitMessageTypeEnum.Text);
-        setEntityToHandleOrigColor();
-        addTextArea.setText("");
+        addTextArea.clear();
     }
 
     public void deletePressedHandle() {

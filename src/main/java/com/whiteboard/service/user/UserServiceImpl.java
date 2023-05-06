@@ -5,14 +5,20 @@ import com.whiteboard.dao.repository.UserRepository;
 import com.whiteboard.dto.DBActionResult;
 import com.whiteboard.service.board.BoardUserConService;
 import com.whiteboard.singletons.UserSession;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.whiteboard.constants.AppMessages.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService, ApplicationListener<ContextClosedEvent> {
@@ -25,7 +31,6 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
 
     @Override
     public DBActionResult login(User user) {
-
         User userFromDb = findByName(user.getName());
 
         if (!(isUserExists(userFromDb)) ||
@@ -64,16 +69,22 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
                     .failureReason(UNAVAILABLE_EMAIL).build();
         }
 
-
         try {
-            user.setPassword(passwordEncryptService.encrypt(user.getPassword()));
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            if (null != user.getPassword()) {
+                user.setPassword(passwordEncryptService.encrypt(user.getPassword()));
+            }
+            userRepository.save(user);
+        } catch (ConstraintViolationException e) {
+            log.error(e.getMessage());
+            final String failureReason = buildConstraintViolationMessage(e);
+            return DBActionResult.builder()
+                    .isSuccess(false)
+                    .failureReason(failureReason).build();
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
-        userRepository.save(user);
-
-        return DBActionResult.builder().isSuccess(true).build();
+        return  DBActionResult.builder().isSuccess(true).build();
     }
 
     @Override
@@ -134,5 +145,21 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
         }
 
         return result;
+    }
+
+    private String buildConstraintViolationMessage(ConstraintViolationException e) {
+        Map<String, String> errMap = new HashMap<>();
+
+        e.getConstraintViolations().forEach(constraintViolation -> {
+            String propName = constraintViolation.getPropertyPath().toString();
+            errMap.putIfAbsent(propName, "");
+            errMap.put(propName, errMap.get(propName) + "\n" + constraintViolation.getMessage());
+        });
+
+        String message = errMap.toString();
+
+        return message.substring(1, message.length() - 1)
+                .replaceAll("=", ":")
+                .replaceAll(", ", "\n");
     }
 }

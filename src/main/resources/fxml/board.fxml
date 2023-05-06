@@ -15,7 +15,7 @@
 
 <AnchorPane fx:id="anchorPane" prefHeight="525.0" prefWidth="0.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.whiteboard.controller.BoardController">
    <children>
-      <Button fx:id="backBtn" layoutX="8.0" layoutY="7.0" mnemonicParsing="false" onAction="#goBack" text="leave">
+      <Button fx:id="backBtn" layoutX="8.0" layoutY="7.0" mnemonicParsing="false" onAction="#goBack" text="Leave">
          <effect>
             <Glow />
          </effect></Button>
@@ -25,7 +25,7 @@
          </children></VBox>
       <Label layoutX="8.0" layoutY="389.0" prefHeight="18.0" prefWidth="66.0" text="Messages" />
       <TextField fx:id="messageTextField" layoutY="491.0" prefHeight="31.0" prefWidth="754.0" />
-      <Button fx:id="sendMessageBtn" layoutX="754.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="send">
+      <Button fx:id="sendMessageBtn" layoutX="754.0" layoutY="491.0" minHeight="31.0" minWidth="53.0" mnemonicParsing="false" onAction="#createMessage" prefHeight="31.0" prefWidth="53.0" text="Send">
          <effect>
             <Glow />
          </effect></Button>

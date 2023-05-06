@@ -15,5 +15,5 @@ spring:
     replyTimeout: 5000
   security:
     encrypt-algorithm: AES
-    secret-key: mySecretKey
+    secret-key: secretKeyExample
 
