@@ -13,7 +13,8 @@ public class AppMessages {
             UNAVAILABLE_BOARD_NAME = "The board name is already taken.",
             BOARD_NAME_IS_REQUIRED = "The board name field is required",
             BEFORE_EXIT_MESSAGE = "Are you sure you want to exit?",
-            BEFORE_LEAVE_BOARD_MESSAGE = "Are you sure you want to leave the board?";
+            BEFORE_LEAVE_BOARD_MESSAGE = "Are you sure you want to leave the board?",
+            REQUIERD_PASSWORD = "The password must not blank.";
 
     private AppMessages(){}
 }

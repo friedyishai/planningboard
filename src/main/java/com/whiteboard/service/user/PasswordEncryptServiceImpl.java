@@ -9,7 +9,7 @@ import java.security.Key;
 import java.util.Base64;
 
 @Service
-public class PasswordEncryptServiceImpl {
+public class PasswordEncryptServiceImpl implements PasswordEncryptService {
 
     @Value("${spring.security.encrypt-algorithm}")
     private String encryptAlgorithm;

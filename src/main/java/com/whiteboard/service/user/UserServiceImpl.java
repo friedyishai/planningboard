@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
     private final ApplicationContext applicationContext;
     private final UserSession userSession;
     private final UserRepository userRepository;
-    private final PasswordEncryptServiceImpl passwordEncryptService;
+    private final PasswordEncryptService passwordEncryptService;
 
     @Override
     public DBActionResult login(User user) {
@@ -57,6 +57,12 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
     @Override
     public DBActionResult register(User user) {
 
+        if (null == user.getPassword() || user.getPassword().isBlank()) {
+            return DBActionResult.builder()
+                    .isSuccess(false)
+                    .failureReason(REQUIERD_PASSWORD).build();
+        }
+
         if (!(isUserNameAvailable(user.getName()))) {
             return DBActionResult.builder()
                     .isSuccess(false)
@@ -70,9 +76,7 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
         }
 
         try {
-            if (null != user.getPassword()) {
-                user.setPassword(passwordEncryptService.encrypt(user.getPassword()));
-            }
+            user.setPassword(passwordEncryptService.encrypt(user.getPassword()));
             userRepository.save(user);
         } catch (ConstraintViolationException e) {
             log.error(e.getMessage());
@@ -84,7 +88,7 @@ public class UserServiceImpl implements UserService, ApplicationListener<Context
             log.error(e.getMessage());
         }
 
-        return  DBActionResult.builder().isSuccess(true).build();
+        return DBActionResult.builder().isSuccess(true).build();
     }
 
     @Override
